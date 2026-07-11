@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# defense en profondeur secrets (regle Adam)
+*secret*
+*.token
+*.pem
+sbp_*
+ghp_*
+github_pat_*
+scripts/*.local.mjs
+
+# le template d env est versionne, jamais les vrais .env
+!.env.example

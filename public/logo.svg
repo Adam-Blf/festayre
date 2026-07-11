@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Festayre">
+  <!--
+    Logo Festayre : le foulard rouge et blanc, symbole universel des
+    ferias du Sud-Ouest. Fond rouge foulard, bandana blanc noue.
+  -->
+  <rect width="512" height="512" rx="112" fill="#c8102e"/>
+  <!-- Tails du noeud, derriere -->
+  <path d="M186 122 C150 90 118 96 100 120 C140 128 158 146 176 170 Z" fill="#ffffff" opacity="0.92"/>
+  <path d="M326 122 C362 90 394 96 412 120 C372 128 354 146 336 170 Z" fill="#ffffff" opacity="0.92"/>
+  <!-- Noeud -->
+  <rect x="196" y="96" width="120" height="72" rx="30" fill="#ffffff"/>
+  <!-- Bandana triangulaire -->
+  <path d="M96 176 L416 176 L256 420 Z" fill="#ffffff"/>
+  <!-- Pli du bandana, rappel rouge -->
+  <path d="M136 200 L376 200 L256 384 Z" fill="#c8102e" opacity="0.12"/>
+</svg>
