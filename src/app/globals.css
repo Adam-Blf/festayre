@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
 /*
- * Design system Festayre.
- * Univers visuel : l'affiche de feria, blanc casse + rouge sang + encre.
- * Le rouge est LA couleur du Sud-Ouest en fete (foulard, ceinture),
- * on l'assume en couleur primaire, pas en simple accent.
+ * Design system Festayre, aligne sur le logo officiel :
+ * pin de localisation navy #15274b + foulard rouge #b80c1d sur
+ * fond blanc casse. Le rouge est la couleur d'action, le navy la
+ * couleur d'encre.
  */
 :root {
   --background: #faf6f0;   /* blanc casse, papier d'affiche */
-  --foreground: #1c1414;   /* encre chaude, pas un noir pur */
+  --foreground: #15274b;   /* navy du logo officiel */
   --card: #ffffff;
-  --card-border: #e8ded2;
-  --festa-red: #c8102e;    /* rouge foulard */
-  --festa-red-deep: #8f0b20;
+  --card-border: #e5ddd2;
+  --festa-red: #b80c1d;    /* rouge foulard du logo officiel */
+  --festa-navy: #15274b;   /* navy du pin de localisation */
   --festa-green: #007a53;  /* clin d'oeil vert basque */
-  --muted: #7a6a60;
+  --muted: #64718c;
 }
 
 @theme inline {
@@ -23,24 +23,24 @@
   --color-card: var(--card);
   --color-card-border: var(--card-border);
   --color-festa-red: var(--festa-red);
-  --color-festa-red-deep: var(--festa-red-deep);
+  --color-festa-navy: var(--festa-navy);
   --color-festa-green: var(--festa-green);
   --color-muted: var(--muted);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
 }
 
-/* Dark mode automatique : nuit de feria, encre inversee, rouge ravive. */
+/* Dark mode automatique : nuit de feria en navy profond, rouge ravive. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #171011;
-    --foreground: #f4ece2;
-    --card: #221718;
-    --card-border: #3a2a2c;
-    --festa-red: #ff3b52;
-    --festa-red-deep: #c8102e;
+    --background: #0d1526;
+    --foreground: #f4efe6;
+    --card: #16203a;
+    --card-border: #263355;
+    --festa-red: #ff4d5f;
+    --festa-navy: #9db1dd;
     --festa-green: #2fbd8f;
-    --muted: #a89388;
+    --muted: #94a1c0;
   }
 }
 
@@ -50,18 +50,41 @@ body {
   font-family: var(--font-body), system-ui, sans-serif;
 }
 
-/* Titres facon affiche de feria : gras, serres, majuscules. */
+/* Titres facon affiche de feria : Anton condensee, majuscules.
+ * Anton n'existe qu'en 400 : on neutralise les font-bold utilitaires
+ * pour eviter le faux-gras synthetique. */
 .display {
   font-family: var(--font-display), var(--font-body), sans-serif;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.015em;
   line-height: 0.95;
+  font-weight: 400 !important;
+}
+
+/* Tampon d'encre : statut d'une feria, pose de travers comme un
+ * coup de tampon sur un billet. */
+.stamp {
+  display: inline-block;
+  transform: rotate(-6deg);
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Perforation de billet : pointilles verticaux entre la souche
+ * (date) et le corps du billet. */
+.ticket-perf {
+  border-left: 2px dashed var(--card-border);
 }
 
 /* Pastille "EN CE MOMENT" qui pulse doucement. */
 @keyframes livePulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgb(200 16 46 / 0.45); }
-  50% { box-shadow: 0 0 0 8px rgb(200 16 46 / 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgb(184 12 29 / 0.45); }
+  50% { box-shadow: 0 0 0 8px rgb(184 12 29 / 0); }
 }
 .live-pulse { animation: livePulse 1.8s ease-in-out infinite; }
 

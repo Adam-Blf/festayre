@@ -13,12 +13,12 @@
  * IMPORTANT : incrementer CACHE_VERSION a chaque deploiement qui
  * change les assets, sinon les anciens fichiers restent servis.
  */
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const STATIC_CACHE = `festayre-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `festayre-dynamic-${CACHE_VERSION}`;
 
 /* Coquille minimale pre-cachee a l'installation. */
-const APP_SHELL = ["/", "/offline", "/icons/icon-192.png", "/logo.svg"];
+const APP_SHELL = ["/", "/offline", "/icons/icon-192.png", "/logo.png"];
 
 /* Hotes de donnees externes autorises dans le cache dynamique. */
 const DATA_HOSTS = [
