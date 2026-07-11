@@ -32,7 +32,8 @@ export default function Onboarding() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const supabase = getSupabaseBrowser();
@@ -44,16 +45,21 @@ export default function Onboarding() {
     router.replace("/");
   };
 
-  /** Creation de compte par lien magique depuis l'onboarding. */
+  /**
+   * Creation de compte email + mot de passe depuis l'onboarding.
+   * Confirmation auto activee cote Supabase : la session demarre
+   * immediatement, on entre direct dans l'app.
+   */
   const signUp = async () => {
-    if (!supabase || !email.includes("@")) return;
+    if (!supabase || !email.includes("@") || password.length < 8) return;
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: window.location.origin + "/compte" },
-    });
+    const { error: err } = await supabase.auth.signUp({ email, password });
     setBusy(false);
-    if (!error) setSent(true);
+    if (err) {
+      setError("Inscription impossible (email déjà utilisé ?). Tu peux te connecter depuis Mon compte.");
+    } else {
+      finish();
+    }
   };
 
   return (
@@ -96,35 +102,38 @@ export default function Onboarding() {
               <Image src="/logo.png" alt="Festayre" width={120} height={135} priority />
               <h1 className="display mt-6 text-3xl text-festa-navy">Ton compte</h1>
               <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
-                Un email, un lien, zéro mot de passe. Il débloque la
-                communauté (rencontres, fil, covoiturage) et Festayre+.
+                Email + mot de passe, 10 secondes. Il débloque la communauté
+                (rencontres, messagerie, covoiturage) et Festayre+.
               </p>
 
               {isSupabaseConfigured() ? (
-                sent ? (
-                  <p className="mt-6 rounded-xl border border-festa-green bg-festa-green/5 p-4 text-sm font-semibold text-festa-green">
-                    Lien envoyé, ouvre ta boîte mail puis reviens.
-                  </p>
-                ) : (
-                  <div className="mt-6 w-full max-w-sm space-y-2">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && signUp()}
-                      placeholder="ton@email.fr"
-                      autoComplete="email"
-                      className="min-h-12 w-full rounded-xl border border-card-border bg-card px-4 text-base"
-                    />
-                    <button
-                      onClick={signUp}
-                      disabled={busy || !email.includes("@")}
-                      className="min-h-12 w-full rounded-xl bg-festa-red text-sm font-bold text-white disabled:opacity-50"
-                    >
-                      {busy ? "Envoi..." : "Créer mon compte"}
-                    </button>
-                  </div>
-                )
+                <div className="mt-6 w-full max-w-sm space-y-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="ton@email.fr"
+                    autoComplete="email"
+                    className="min-h-12 w-full rounded-xl border border-card-border bg-card px-4 text-base"
+                  />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && signUp()}
+                    placeholder="Mot de passe (8 caractères min)"
+                    autoComplete="new-password"
+                    className="min-h-12 w-full rounded-xl border border-card-border bg-card px-4 text-base"
+                  />
+                  <button
+                    onClick={signUp}
+                    disabled={busy || !email.includes("@") || password.length < 8}
+                    className="min-h-12 w-full rounded-xl bg-festa-red text-sm font-bold text-white disabled:opacity-50"
+                  >
+                    {busy ? "Création..." : "Créer mon compte"}
+                  </button>
+                  {error && <p className="text-xs text-festa-red">{error}</p>}
+                </div>
               ) : (
                 <p className="mt-6 text-sm text-muted">
                   Les comptes arrivent bientôt sur ce déploiement.
@@ -159,14 +168,7 @@ export default function Onboarding() {
             Continuer
           </button>
         )}
-        {step === lastStep && sent && (
-          <button
-            onClick={finish}
-            className="min-h-12 w-full rounded-xl bg-festa-navy text-sm font-bold text-white"
-          >
-            Entrer dans Festayre
-          </button>
-        )}
+
       </div>
     </div>
   );
