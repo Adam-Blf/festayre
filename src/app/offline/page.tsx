@@ -7,9 +7,9 @@ export default function OfflinePage() {
     <main className="flex flex-1 flex-col items-center justify-center px-6 text-center">
       <h1 className="display text-4xl font-extrabold text-festa-red">Hors ligne</h1>
       <p className="mt-3 max-w-sm text-sm text-muted">
-        Le reseau est sature (bienvenue en feria). Les dernieres donnees
-        chargees restent disponibles, reviens sur cette page quand une
-        barre de reseau reapparait.
+        Le réseau est saturé (bienvenue en féria). Les dernières données
+        chargées restent disponibles, reviens sur cette page quand une
+        barre de réseau réapparaît.
       </p>
     </main>
   );

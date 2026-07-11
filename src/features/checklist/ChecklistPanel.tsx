@@ -26,14 +26,14 @@ type Item = {
 const DEFAULT_ITEMS = [
   "Tenue blanche",
   "Foulard et ceinture rouges",
-  "Batterie externe chargee",
-  "Creme solaire",
-  "Especes en petites coupures",
+  "Batterie externe chargée",
+  "Crème solaire",
+  "Espèces en petites coupures",
   "Gourde ou bouteille d'eau",
   "Bouchons d'oreilles",
-  "Chaussures deja portees (pas neuves)",
+  "Chaussures déjà portées (pas neuves)",
   "Doliprane pour le lendemain",
-  "Point de rendez-vous fixe avec le groupe",
+  "Point de rendez-vous fixé avec le groupe",
 ];
 
 const STORAGE_KEY = "festayre.checklist.v1";
@@ -98,10 +98,10 @@ export default function ChecklistPanel() {
       <div className="rounded-xl border border-card-border bg-card p-3">
         <div className="flex justify-between text-sm font-bold">
           <span>
-            {done}/{items.length} pret
+            {done}/{items.length} prêt
           </span>
           <button onClick={reset} className="text-xs font-semibold text-muted underline">
-            Tout decocher
+            Tout décocher
           </button>
         </div>
         <div className="mt-2 h-2 overflow-hidden rounded-full bg-card-border">
@@ -125,7 +125,7 @@ export default function ChecklistPanel() {
                 type="checkbox"
                 checked={item.checked}
                 onChange={() => toggle(item.id)}
-                className="h-5 w-5 accent-[#c8102e]"
+                className="h-5 w-5 accent-[#b80c1d]"
               />
               <span className={item.checked ? "line-through" : ""}>{item.label}</span>
               {item.custom && (
@@ -151,7 +151,7 @@ export default function ChecklistPanel() {
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addItem()}
-          placeholder="Ajouter un truc a ne pas oublier..."
+          placeholder="Ajouter un truc à ne pas oublier..."
           className="flex-1 rounded-lg border border-card-border bg-card px-3 py-2 text-sm"
         />
         <button

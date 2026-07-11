@@ -67,7 +67,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
       {/* En-tete compact : retour + identite de la feria. */}
       <header className="border-b border-card-border bg-card px-4 py-3">
         <div className="flex items-center gap-3">
-          <Link href="/" aria-label="Retour a l'accueil" className="text-2xl font-bold">
+          <Link href="/" aria-label="Retour à l'accueil" className="-ml-2 flex h-11 w-11 items-center justify-center text-2xl font-bold">
             {"<"}
           </Link>
           <div className="min-w-0 flex-1">
@@ -104,7 +104,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
           <button
             key={id}
             onClick={() => setView(id)}
-            className={`flex-1 py-2.5 ${
+            className={`min-h-11 flex-1 py-2.5 ${
               view === id
                 ? "border-b-2 border-festa-red text-festa-red"
                 : "text-muted"
@@ -122,7 +122,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
             <button
               key={tab.id}
               onClick={() => setCategory(tab.id)}
-              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
+              className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-bold ${
                 category === tab.id
                   ? "bg-festa-red text-white"
                   : "border border-card-border bg-card text-muted"
@@ -149,8 +149,8 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
               <div className="h-full">
                 {poisError && (
                   <p className="p-4 text-center text-sm text-muted">
-                    Serveurs de donnees satures (classique un soir de
-                    feria). Reessaie dans une minute.
+                    Serveurs de données saturés (classique un soir de
+                    féria). Réessaie dans une minute.
                   </p>
                 )}
                 <FeriaMap
@@ -176,11 +176,11 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
               <div className="space-y-4 p-4 text-sm">
                 <section className="rounded-xl border border-card-border bg-card p-3">
                   <h3 className="display text-base font-extrabold text-festa-red">
-                    Bracelets / entree
+                    Bracelets / entrée
                   </h3>
                   <p className="mt-1 leading-snug">
                     {feria.bracelets ??
-                      "Entree libre a priori. Verifie les eventuels concerts ou arenes payants sur le site officiel."}
+                      "Entrée libre a priori. Vérifie les éventuels concerts ou arènes payants sur le site officiel."}
                   </p>
                 </section>
                 <section className="rounded-xl border border-card-border bg-card p-3">
@@ -189,7 +189,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   </h3>
                   <p className="mt-1 leading-snug">
                     {feria.shuttles ??
-                      "Consulte l'onglet Carte, categorie Bus / navettes, pour les arrets autour de toi."}
+                      "Consulte l'onglet Carte, catégorie Bus / navettes, pour les arrêts autour de toi."}
                   </p>
                 </section>
                 <section className="rounded-xl border border-festa-red/40 bg-festa-red/5 p-3">
@@ -197,14 +197,14 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                     Urgences
                   </h3>
                   <ul className="mt-1 space-y-1 font-semibold">
-                    <li><a href="tel:112">112, urgences europeennes</a></li>
+                    <li><a href="tel:112">112, urgences européennes</a></li>
                     <li><a href="tel:15">15, SAMU</a></li>
                     <li><a href="tel:17">17, Police</a></li>
                     <li><a href="tel:18">18, Pompiers</a></li>
                     <li><a href="tel:3114">3114, souffrance psychique</a></li>
                   </ul>
                   <p className="mt-2 text-xs text-muted">
-                    Postes de secours signales sur place. Ne laisse jamais
+                    Postes de secours signalés sur place. Ne laisse jamais
                     un pote seul en vrac.
                   </p>
                 </section>
@@ -214,7 +214,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   rel="noopener noreferrer"
                   className="block rounded-xl bg-festa-red p-3 text-center font-bold text-white"
                 >
-                  Site officiel de la feria
+                  Site officiel de la féria
                 </a>
               </div>
             )}

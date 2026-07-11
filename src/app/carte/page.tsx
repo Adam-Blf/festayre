@@ -2,7 +2,7 @@
 
 /**
  * /carte, la carte de visite festayre d'Adam.
- * Un QR code plein ecran vers Instagram : en feria on ne tape pas un
+ * Un QR code plein ecran vers Instagram : en féria on ne tape pas un
  * pseudo sur un ecran mouille, on scanne.
  */
 import Link from "next/link";
@@ -15,7 +15,7 @@ export default function CartePage() {
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-4 pb-10">
       <header className="flex items-center gap-3 py-6">
-        <Link href="/" aria-label="Retour" className="text-2xl font-bold">
+        <Link href="/" aria-label="Retour" className="-ml-2 flex h-11 w-11 items-center justify-center text-2xl font-bold">
           {"<"}
         </Link>
         <h1 className="display text-3xl font-extrabold text-festa-red">Ma carte</h1>
@@ -37,7 +37,7 @@ export default function CartePage() {
             value={INSTAGRAM_URL}
             className="h-auto w-full"
             size={256}
-            fgColor="#c8102e"
+            fgColor="#b80c1d"
             bgColor="#ffffff"
             level="M"
           />

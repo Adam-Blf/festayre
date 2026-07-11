@@ -58,8 +58,8 @@ export default function AccountPanel() {
     setBusy(false);
     setMessage(
       error
-        ? "Envoi impossible, verifie l'adresse email."
-        : "Lien de connexion envoye, verifie ta boite mail."
+        ? "Envoi impossible, vérifie l'adresse email."
+        : "Lien de connexion envoyé, vérifie ta boîte mail."
     );
   }, [supabase, email]);
 
@@ -85,8 +85,8 @@ export default function AccountPanel() {
   if (!isSupabaseConfigured()) {
     return (
       <p className="rounded-xl border border-card-border bg-card p-4 text-sm text-muted">
-        Les comptes ne sont pas actives sur ce deploiement. Toutes les
-        fonctions de survie en feria restent 100 % utilisables sans compte.
+        Les comptes ne sont pas activés sur ce déploiement. Toutes les
+        fonctions de survie en féria restent 100 % utilisables sans compte.
       </p>
     );
   }
@@ -97,7 +97,7 @@ export default function AccountPanel() {
       <div className="rounded-xl border border-card-border bg-card p-4">
         <h2 className="display text-lg font-extrabold">Connexion</h2>
         <p className="mt-1 text-sm text-muted">
-          Un email, un lien, zero mot de passe.
+          Un email, un lien, zéro mot de passe.
         </p>
         <input
           type="email"
@@ -124,13 +124,13 @@ export default function AccountPanel() {
     <div className="space-y-4">
       <div className="rounded-xl border border-card-border bg-card p-4">
         <p className="text-sm">
-          Connecte en tant que <strong>{user.email}</strong>
+          Connecté en tant que <strong>{user.email}</strong>
         </p>
         <button
           onClick={() => supabase?.auth.signOut()}
           className="mt-2 text-xs font-semibold text-muted underline"
         >
-          Se deconnecter
+          Se déconnecter
         </button>
       </div>
 
@@ -144,13 +144,13 @@ export default function AccountPanel() {
         </h2>
         {isPlus ? (
           <p className="mt-1 text-sm">
-            Merci pour le soutien. Favoris synchronises et badge supporter
-            actives.
+            Merci pour le soutien. Favoris synchronisés et badge supporter
+            activés.
           </p>
         ) : (
           <>
             <p className="mt-1 text-sm text-muted">
-              Paiement unique de soutien : favoris synchronises entre
+              Paiement unique de soutien : favoris synchronisés entre
               appareils, badge supporter, et tu finances les serveurs.
             </p>
             <button

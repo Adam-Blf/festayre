@@ -27,7 +27,7 @@ export function useGeolocation(): GeolocationState {
 
   useEffect(() => {
     if (!("geolocation" in navigator)) {
-      setState({ position: null, error: "Geolocalisation non supportee.", loading: false });
+      setState({ position: null, error: "Géolocalisation non supportée.", loading: false });
       return;
     }
 
@@ -43,7 +43,7 @@ export function useGeolocation(): GeolocationState {
           position: null,
           error:
             err.code === err.PERMISSION_DENIED
-              ? "Geolocalisation refusee : distances calculees depuis le centre de la feria."
+              ? "Géolocalisation refusée : distances calculées depuis le centre de la féria."
               : "Position introuvable pour le moment.",
           loading: false,
         }),

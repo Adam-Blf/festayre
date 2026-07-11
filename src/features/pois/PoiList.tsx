@@ -39,9 +39,9 @@ export default function PoiList({ pois, category }: Props) {
   if (items.length === 0) {
     return (
       <p className="p-6 text-center text-sm text-muted">
-        Rien de reference dans OpenStreetMap pour cette categorie ici.
-        Pendant la feria, cherche aussi les urinoirs temporaires non
-        cartographies.
+        Rien de référencé dans OpenStreetMap pour cette catégorie ici.
+        Pendant la féria, cherche aussi les urinoirs temporaires non
+        cartographiés.
       </p>
     );
   }
@@ -67,15 +67,15 @@ export default function PoiList({ pois, category }: Props) {
               {poi.fee === "yes" && "Payantes"}
             </p>
           </div>
-          <span className="shrink-0 text-sm font-bold text-festa-red">
+          <span className="shrink-0 text-sm font-bold tabular-nums text-festa-red">
             {formatDistance(poi.distanceM)}
           </span>
           <a
             href={walkingDirectionsUrl(poi)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Itineraire a pied vers ${poi.name}`}
-            className="shrink-0 rounded-full bg-festa-red px-3 py-1.5 text-xs font-bold text-white"
+            aria-label={`Itinéraire à pied vers ${poi.name}`}
+            className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white"
           >
             Y aller
           </a>

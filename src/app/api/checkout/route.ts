@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const priceId = process.env.STRIPE_PRICE_FESTAYRE_PLUS;
   if (!secretKey || !priceId) {
     return NextResponse.json(
-      { error: "Paiement non configure sur ce deploiement." },
+      { error: "Paiement non configuré sur ce déploiement." },
       { status: 503 }
     );
   }
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   // 1. Authentification : on refuse les anonymes.
   const supabase = await getSupabaseServer();
   if (!supabase) {
-    return NextResponse.json({ error: "Comptes non configures." }, { status: 503 });
+    return NextResponse.json({ error: "Comptes non configurés." }, { status: 503 });
   }
   const {
     data: { user },

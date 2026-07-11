@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!secretKey || !webhookSecret || !supabaseUrl || !serviceRoleKey) {
-    return NextResponse.json({ error: "Webhook non configure." }, { status: 503 });
+    return NextResponse.json({ error: "Webhook non configuré." }, { status: 503 });
   }
 
   // 1. Verification de la signature sur le corps BRUT de la requete.
@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       );
       if (error) {
         // 500 pour que Stripe retente automatiquement plus tard.
-        return NextResponse.json({ error: "Ecriture en base echouee." }, { status: 500 });
+        return NextResponse.json({ error: "Écriture en base échouée." }, { status: 500 });
       }
     }
   }
