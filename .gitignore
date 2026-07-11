@@ -48,3 +48,6 @@ sbp_*
 ghp_*
 github_pat_*
 scripts/*.local.mjs
+
+# le template d env est versionne, jamais les vrais .env
+!.env.example
