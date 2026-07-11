@@ -2,6 +2,14 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.6.1] - 2026-07-11
+
+- Script E2E communaute (scripts/e2e_community.mjs) : 12 verifications
+  sur le Supabase de prod, dont 3 negatives de securite (message avant
+  match refuse par la RLS, Instagram cache avant match, profil mineur
+  rejete par la contrainte SQL). Execute ce jour : 12/12 verts.
+- Headers CSP + HSTS verifies presents en production.
+
 ## [0.6.0] - 2026-07-11
 
 - Auth par mot de passe (inscription/connexion/reinitialisation),
