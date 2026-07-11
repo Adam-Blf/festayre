@@ -8,7 +8,8 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.1.1-C8102E?style=flat-square)
+![version](https://img.shields.io/badge/version-0.2.0-15274b?style=flat-square)
+![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
 
@@ -34,6 +35,14 @@ et San Fermin en bonus.
 - [x] PWA installable + mode hors ligne (service worker)
 - [x] Comptes par lien magique (Supabase) et pack soutien Festayre+ (Stripe)
 - [x] Analytics PostHog (UE) et monitoring Sentry, actifs si cles presentes
+
+## Marque
+
+Logo officiel : pin de localisation navy `#15274b` au foulard rouge
+`#b80c1d` (fichiers `public/logo.svg`, `public/logo-full.svg`,
+`public/logo.png`). Icones PWA et favicon regeneres depuis la marque
+via `python scripts/gen_icons.py`. Typo : Anton (titres, style affiche
+de feria) + Archivo (texte).
 
 ## Stack
 
@@ -80,6 +89,10 @@ Detail dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - Cles secretes serveur uniquement, `.env*` gitignore
 - Headers securite globaux (frame deny, nosniff, permissions policy)
 - La position GPS ne quitte jamais le telephone
+
+## Changelog
+
+Voir [docs/CHANGELOG.md](docs/CHANGELOG.md).
 
 ## Licence
 
