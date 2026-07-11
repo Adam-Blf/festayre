@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.1.0-C8102E?style=flat-square)
+![version](https://img.shields.io/badge/version-0.1.1-C8102E?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
 
