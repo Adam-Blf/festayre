@@ -1,6 +1,7 @@
 """
-gen_icons.py, genere les icones PWA (PNG) et le favicon a partir de la
-meme geometrie que public/logo.svg : bandana blanc noue sur fond rouge.
+gen_icons.py, genere les icones PWA (PNG) et le favicon depuis le logo
+officiel Festayre (pin de localisation navy + foulard rouge),
+fichier source : scripts/logo-mark.png (extrait du SVG de la marque).
 
 Usage : python scripts/gen_icons.py
 Sorties : public/icons/icon-192.png, icon-512.png,
@@ -8,48 +9,49 @@ Sorties : public/icons/icon-192.png, icon-512.png,
 """
 from PIL import Image, ImageDraw
 
-RED = (200, 16, 46, 255)      # rouge foulard #c8102e
-WHITE = (255, 255, 255, 255)
+CREAM = (250, 246, 240, 255)  # fond blanc casse de la marque
+MARK = "scripts/logo-mark.png"
 
-def draw_logo(size: int, maskable: bool) -> Image.Image:
-    """Dessine le logo a l'echelle demandee.
+def compose(size: int, mark_ratio: float, rounded: bool) -> Image.Image:
+    """Pose le logo centre sur un fond creme.
 
-    maskable=True : fond plein bord a bord et motif reduit dans la
-    "safe zone" centrale (80 %), exigence Android adaptive icons.
+    mark_ratio : part du canevas occupee par le logo. Les icones
+    maskable exigent une "safe zone" (logo reduit a ~62 %), Android
+    pouvant rogner les bords en cercle.
     """
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    s = size / 512  # facteur d'echelle par rapport au viewBox SVG
-
-    # Fond : coins arrondis en usage normal, plein pour le maskable.
-    if maskable:
-        d.rectangle([0, 0, size, size], fill=RED)
-        pad = 0.10 * size  # le motif recule dans la safe zone
-        s = s * 0.80
-        off = pad
+    if rounded:
+        d.rounded_rectangle([0, 0, size - 1, size - 1], radius=int(size * 0.22), fill=CREAM)
     else:
-        d.rounded_rectangle([0, 0, size - 1, size - 1], radius=int(112 * s), fill=RED)
-        off = 0
+        d.rectangle([0, 0, size, size], fill=CREAM)
 
-    def pt(x: float, y: float) -> tuple[float, float]:
-        return (off + x * s, off + y * s)
-
-    # Tails du noeud (triangles approximes des courbes SVG).
-    d.polygon([pt(186, 122), pt(100, 120), pt(176, 170)], fill=WHITE)
-    d.polygon([pt(326, 122), pt(412, 120), pt(336, 170)], fill=WHITE)
-    # Noeud.
-    d.rounded_rectangle([*pt(196, 96), *pt(316, 168)], radius=int(30 * s), fill=WHITE)
-    # Bandana triangulaire.
-    d.polygon([pt(96, 176), pt(416, 176), pt(256, 420)], fill=WHITE)
+    mark = Image.open(MARK).convert("RGBA")
+    # L'export de la marque a un fond noir plein au lieu d'alpha :
+    # on detoure. Seuil 25 : le noir de fond (~0) part, le navy du
+    # pin (#15274b, composante max 75) reste intact.
+    data = [
+        (r, g, b, 0) if max(r, g, b) < 25 else (r, g, b, a)
+        for (r, g, b, a) in mark.getdata()
+    ]
+    mark.putdata(data)
+    target = int(size * mark_ratio)
+    # Conserve le ratio du logo (il est plus haut que large).
+    scale = target / max(mark.size)
+    mark = mark.resize((int(mark.width * scale), int(mark.height * scale)), Image.LANCZOS)
+    img.alpha_composite(
+        mark, ((size - mark.width) // 2, (size - mark.height) // 2)
+    )
     return img
 
 def main() -> None:
-    draw_logo(192, False).save("public/icons/icon-192.png")
-    draw_logo(512, False).save("public/icons/icon-512.png")
-    draw_logo(512, True).save("public/icons/icon-maskable-512.png")
-    # Favicon multi-tailles.
-    draw_logo(64, False).save("src/app/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-    print("Icones generees.")
+    compose(192, 0.80, True).save("public/icons/icon-192.png")
+    compose(512, 0.80, True).save("public/icons/icon-512.png")
+    compose(512, 0.62, False).save("public/icons/icon-maskable-512.png")
+    compose(64, 0.85, True).save(
+        "src/app/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)]
+    )
+    print("Icones generees depuis le logo officiel.")
 
 if __name__ == "__main__":
     main()

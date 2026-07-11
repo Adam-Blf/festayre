@@ -2,10 +2,15 @@
 
 /**
  * page.tsx (accueil), la porte d'entree de Festayre.
+ *
  * Metier : choisir sa feria en 2 secondes. Les ferias en cours
  * remontent en tete, puis les prochaines par date, puis les passees.
+ * Design : un haut de page facon affiche de feria (typo Anton
+ * empilee navy/rouge, logo pin au foulard), puis la liste des
+ * billets d'entree.
  */
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { FERIAS, feriaStatus } from "@/features/ferias/data";
 import FeriaCard from "@/features/ferias/FeriaCard";
@@ -21,28 +26,41 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-4 pb-10">
-      {/* Entete affiche de feria. */}
-      <header className="pb-6 pt-10 text-center">
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+      {/* Affiche : logo + titre empile comme un poster de feria. */}
+      <header className="pb-7 pt-10">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="display text-6xl font-extrabold text-festa-red"
+          className="flex items-end justify-between gap-4"
         >
-          Festayre
-        </motion.h1>
-        {/* Brand line officielle. */}
-        <p className="display mt-1 text-lg font-bold">
-          Les ferias, directement dans votre poche.
-        </p>
-        <p className="mt-2 text-sm font-medium text-muted">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted">
+              Sud-Ouest, été 2026
+            </p>
+            <h1 className="display mt-2 text-5xl leading-[0.92]">
+              <span className="block text-festa-navy">Les férias,</span>
+              <span className="block text-festa-red">directement</span>
+              <span className="block text-festa-navy">dans votre poche.</span>
+            </h1>
+          </div>
+          <Image
+            src="/logo.png"
+            alt="Logo Festayre, pin de localisation au foulard rouge"
+            width={88}
+            height={99}
+            priority
+            className="mb-1 shrink-0"
+          />
+        </motion.div>
+        <p className="mt-3 text-sm text-muted">
           Toilettes les plus proches, alcool le moins cher, bus, bracelets,
-          programme et meteo de toutes les ferias du Sud-Ouest.
+          programme et météo. Choisis ta féria.
         </p>
       </header>
 
-      {/* Grille des ferias. */}
-      <section aria-label="Choisir une feria" className="grid gap-3">
+      {/* Les billets. */}
+      <section aria-label="Choisir une féria" className="grid gap-3">
         {sorted.map((feria, i) => (
           <FeriaCard key={feria.id} feria={feria} index={i} />
         ))}
@@ -52,16 +70,16 @@ export default function HomePage() {
       <nav className="mt-8 grid grid-cols-2 gap-3">
         <Link
           href="/checklist"
-          className="col-span-2 rounded-2xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="col-span-2 rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Checklist de survie
           <span className="block text-xs font-normal text-muted">
-            A cocher avant de partir en feria
+            À cocher avant de partir en féria
           </span>
         </Link>
         <Link
           href="/compte"
-          className="rounded-2xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Mon compte
           <span className="block text-xs font-normal text-muted">
@@ -70,7 +88,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/carte"
-          className="rounded-2xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Ma carte QR
           <span className="block text-xs font-normal text-muted">
@@ -80,8 +98,8 @@ export default function HomePage() {
       </nav>
 
       <footer className="mt-10 text-center text-xs text-muted">
-        Festayre v{APP_VERSION}. Donnees cartographiques OpenStreetMap,
-        meteo Open-Meteo. Bois de l&apos;eau entre deux verres.
+        Festayre v{APP_VERSION}. Données OpenStreetMap, météo Open-Meteo.
+        Bois de l&apos;eau entre deux verres.
       </footer>
     </main>
   );

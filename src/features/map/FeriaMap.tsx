@@ -22,7 +22,7 @@ import { TIER_LABELS } from "@/features/pois/overpass";
 /** Couleur de marqueur par categorie metier. */
 const CATEGORY_COLORS: Record<PoiCategory, string> = {
   toilets: "#7c3aed", // violet, visible sur tous les fonds
-  booze: "#c8102e",   // rouge feria, evidemment
+  booze: "#b80c1d",   // rouge foulard officiel
   water: "#0284c7",   // bleu eau
   health: "#059669",  // vert croix de pharmacie
   transport: "#d97706", // orange bus de nuit
@@ -62,7 +62,7 @@ export default function FeriaMap({ center, userPosition, pois }: Props) {
       {/* Position du festayre. */}
       {userPosition && (
         <Marker position={[userPosition.lat, userPosition.lng]} icon={userIcon}>
-          <Popup>Tu es ici (enfin, ton telephone).</Popup>
+          <Popup>Tu es ici (enfin, ton téléphone).</Popup>
         </Marker>
       )}
 
@@ -97,7 +97,7 @@ export default function FeriaMap({ center, userPosition, pois }: Props) {
             )}
             <br />
             <a href={walkingDirectionsUrl(poi)} target="_blank" rel="noopener noreferrer">
-              Itineraire a pied
+              Itinéraire à pied
             </a>
           </Popup>
         </CircleMarker>

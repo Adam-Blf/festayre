@@ -24,7 +24,7 @@ export type WeatherNow = {
  */
 export function weatherLabel(code: number): string {
   if (code === 0) return "Grand soleil";
-  if (code <= 2) return "Plutot degage";
+  if (code <= 2) return "Plutôt dégagé";
   if (code === 3) return "Couvert";
   if (code <= 48) return "Brouillard";
   if (code <= 57) return "Bruine";

@@ -31,7 +31,7 @@ export default function ProgramList({ feria }: { feria: Feria }) {
       ))}
 
       <p className="rounded-xl bg-festa-red/5 p-3 text-xs text-muted">
-        Programme indicatif base sur les editions precedentes. Le seul
+        Programme indicatif basé sur les éditions précédentes. Le seul
         programme officiel est sur{" "}
         <a
           href={feria.official}

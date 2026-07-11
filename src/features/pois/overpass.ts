@@ -93,9 +93,9 @@ export function boozeTier(shop: string): PriceTier {
 
 /** Libelle metier des niveaux de prix, affiche dans l'UI. */
 export const TIER_LABELS: Record<PriceTier, string> = {
-  1: "Prix supermarche",
+  1: "Prix supermarché",
   2: "Prix cave / boissons",
-  3: "Prix depannage",
+  3: "Prix dépannage",
 };
 
 /** Classe un element OSM dans une de nos 4 categories metier. */
@@ -119,11 +119,11 @@ function displayName(tags: Record<string, string>, category: PoiCategory): strin
     case "water":
       return "Point d'eau potable";
     case "health":
-      return tags.amenity === "hospital" ? "Hopital" : "Pharmacie";
+      return tags.amenity === "hospital" ? "Hôpital" : "Pharmacie";
     case "booze":
       return "Commerce de boissons";
     case "transport":
-      return tags.amenity === "bus_station" ? "Gare routiere" : "Arret de bus";
+      return tags.amenity === "bus_station" ? "Gare routière" : "Arrêt de bus";
   }
 }
 
