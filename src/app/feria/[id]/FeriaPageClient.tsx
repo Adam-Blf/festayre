@@ -21,6 +21,7 @@ import PoiList, { CATEGORY_TABS } from "@/features/pois/PoiList";
 import ProgramList from "@/features/program/ProgramList";
 import WeatherCard from "@/features/weather/WeatherCard";
 import { useGeolocation } from "@/features/map/useGeolocation";
+import { useMeetPoint } from "@/features/meetpoint/useMeetPoint";
 import { sortByDistance } from "@/lib/geo";
 
 /* Leaflet touche window : chargement navigateur uniquement. */
@@ -41,6 +42,9 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
   const [poisError, setPoisError] = useState(false);
   const [view, setView] = useState<View>("map");
   const [category, setCategory] = useState<PoiCategory>("toilets");
+  // Point de RDV du groupe (persiste par feria) + retour utilisateur.
+  const { point: meetPoint, setMeetPoint, clearMeetPoint, shareMeetPoint } = useMeetPoint(feria.id);
+  const [meetMsg, setMeetMsg] = useState<string | null>(null);
 
   // Chargement des POI une seule fois par feria (donnee stable).
   useEffect(() => {
@@ -146,7 +150,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
             className="h-full overflow-y-auto"
           >
             {view === "map" && (
-              <div className="h-full">
+              <div className="relative h-full">
                 {poisError && (
                   <p className="p-4 text-center text-sm text-muted">
                     Serveurs de données saturés (classique un soir de
@@ -157,7 +161,49 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   center={feria.center}
                   userPosition={position}
                   pois={sortedPois.filter((p) => p.category === category)}
+                  meetPoint={meetPoint}
                 />
+                {/* Barre RDV du groupe, posee sur la carte. */}
+                <div className="absolute inset-x-3 bottom-3 z-10 flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      // RDV = position actuelle, sinon coeur de la feria.
+                      setMeetPoint(position ?? feria.center);
+                      setMeetMsg("RDV épinglé sur la carte.");
+                    }}
+                    className="flex min-h-11 flex-1 items-center justify-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white shadow-lg"
+                  >
+                    {meetPoint ? "Déplacer le RDV ici" : "Fixer le RDV ici"}
+                  </button>
+                  {meetPoint && (
+                    <>
+                      <button
+                        onClick={async () => setMeetMsg(await shareMeetPoint())}
+                        className="flex min-h-11 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white shadow-lg"
+                      >
+                        Partager
+                      </button>
+                      <button
+                        onClick={() => {
+                          clearMeetPoint();
+                          setMeetMsg("RDV supprimé.");
+                        }}
+                        aria-label="Supprimer le point de RDV"
+                        className="flex h-11 w-11 items-center justify-center rounded-full bg-card text-sm font-bold shadow-lg"
+                      >
+                        X
+                      </button>
+                    </>
+                  )}
+                </div>
+                {meetMsg && (
+                  <p
+                    role="status"
+                    className="absolute inset-x-3 bottom-16 z-10 rounded-lg bg-card/95 p-2 text-center text-xs shadow"
+                  >
+                    {meetMsg}
+                  </p>
+                )}
               </div>
             )}
             {view === "list" &&

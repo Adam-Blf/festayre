@@ -15,8 +15,8 @@
  */
 import type { LatLng } from "@/lib/geo";
 
-/** Les 5 familles de POI du domaine festayre. */
-export type PoiCategory = "toilets" | "booze" | "water" | "health" | "transport";
+/** Les familles de POI du domaine festayre. */
+export type PoiCategory = "toilets" | "booze" | "water" | "health" | "transport" | "shade";
 
 /**
  * Niveau de prix pour l'alcool, deduit du type de commerce OSM :
@@ -65,6 +65,7 @@ export function buildOverpassQuery(center: LatLng, radiusM: number): string {
   nwr["amenity"~"^(pharmacy|hospital)$"]${around};
   node["highway"="bus_stop"]${around};
   nwr["amenity"="bus_station"]${around};
+  nwr["leisure"~"^(park|garden)$"]${around};
 );
 out center tags;`.trim();
 }
@@ -106,6 +107,8 @@ function categorize(tags: Record<string, string>): PoiCategory | null {
   if (tags.shop && BOOZE_SHOPS.includes(tags.shop)) return "booze";
   // Arrets de bus et gares routieres : vital pour les navettes de nuit.
   if (tags.highway === "bus_stop" || tags.amenity === "bus_station") return "transport";
+  // Parcs et jardins : les seuls coins d'ombre fiables en pleine canicule.
+  if (tags.leisure === "park" || tags.leisure === "garden") return "shade";
   return null;
 }
 
@@ -124,6 +127,8 @@ function displayName(tags: Record<string, string>, category: PoiCategory): strin
       return "Commerce de boissons";
     case "transport":
       return tags.amenity === "bus_station" ? "Gare routière" : "Arrêt de bus";
+    case "shade":
+      return "Parc, coin d'ombre";
   }
 }
 

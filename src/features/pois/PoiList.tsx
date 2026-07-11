@@ -18,6 +18,7 @@ export const CATEGORY_TABS: { id: PoiCategory; label: string }[] = [
   { id: "booze", label: "Alcool pas cher" },
   { id: "water", label: "Eau gratuite" },
   { id: "transport", label: "Bus / navettes" },
+  { id: "shade", label: "Ombre" },
   { id: "health", label: "Pharmacie" },
 ];
 

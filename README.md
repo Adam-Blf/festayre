@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.2.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.3.0-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -33,6 +33,12 @@ et San Fermin en bonus.
 - [x] Checklist de survie a cocher (persistee en local)
 - [x] Carte QR Instagram a faire scanner
 - [x] PWA installable + mode hors ligne (service worker)
+- [x] Point de RDV du groupe epingle sur la carte + partage en un tap
+- [x] Mode SAM : groupe, partage de position, alerte SMS discrete
+- [x] Passeport ferias : tampons geolocalises, badges, defis photos
+- [x] Coins d'ombre (parcs) sur la carte
+- [x] Communaute par feria (compte requis) : rencontres avec Instagram
+      revele au match uniquement (RLS), fil de bons plans, covoiturage
 - [x] Comptes par lien magique (Supabase) et pack soutien Festayre+ (Stripe)
 - [x] Analytics PostHog (UE) et monitoring Sentry, actifs si cles presentes
 
@@ -71,8 +77,9 @@ observabilite, copier `.env.example` vers `.env.local` et remplir :
 | PostHog | https://eu.posthog.com, Settings, Project API key |
 | Sentry | https://sentry.io, Settings, Projects, Client Keys (DSN) |
 
-Puis appliquer la migration SQL : `supabase/migrations/0001_init.sql`
-(SQL Editor du dashboard Supabase, ou `supabase db push`).
+Puis appliquer les migrations SQL : `supabase/migrations/0001_init.sql`
+et `0002_community.sql` (SQL Editor du dashboard Supabase, ou
+`supabase db push`).
 
 ## Architecture
 

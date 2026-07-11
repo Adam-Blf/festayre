@@ -26,6 +26,7 @@ const CATEGORY_COLORS: Record<PoiCategory, string> = {
   water: "#0284c7",   // bleu eau
   health: "#059669",  // vert croix de pharmacie
   transport: "#d97706", // orange bus de nuit
+  shade: "#4d7c0f",   // vert olive des parcs
 };
 
 /** Pastille bleue "vous etes ici" (divIcon CSS, pas d'image). */
@@ -40,9 +41,11 @@ type Props = {
   center: LatLng;
   userPosition: LatLng | null;
   pois: (Poi & { distanceM: number })[];
+  /** Point de RDV du groupe, epingle par l'utilisateur. */
+  meetPoint?: LatLng | null;
 };
 
-export default function FeriaMap({ center, userPosition, pois }: Props) {
+export default function FeriaMap({ center, userPosition, pois, meetPoint }: Props) {
   // La carte s'ouvre sur l'utilisateur s'il est localise, sinon sur
   // le coeur de la feria.
   const mapCenter = userPosition ?? center;
@@ -64,6 +67,27 @@ export default function FeriaMap({ center, userPosition, pois }: Props) {
         <Marker position={[userPosition.lat, userPosition.lng]} icon={userIcon}>
           <Popup>Tu es ici (enfin, ton téléphone).</Popup>
         </Marker>
+      )}
+
+      {/* Point de RDV du groupe : gros disque navy impossible a rater. */}
+      {meetPoint && (
+        <CircleMarker
+          center={[meetPoint.lat, meetPoint.lng]}
+          radius={12}
+          pathOptions={{ color: "#ffffff", weight: 3, fillColor: "#15274b", fillOpacity: 1 }}
+        >
+          <Popup>
+            <strong>Point de RDV du groupe</strong>
+            <br />
+            <a
+              href={walkingDirectionsUrl(meetPoint)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Itinéraire à pied
+            </a>
+          </Popup>
+        </CircleMarker>
       )}
 
       {/* Tous les POI, colores par categorie. */}

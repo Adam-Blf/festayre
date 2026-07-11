@@ -2,6 +2,23 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.3.0] - 2026-07-11
+
+- Point de RDV du groupe : epingle sur la carte (localStorage par
+  feria), partage Web Share / presse-papier, marqueur navy dedie.
+- Mode SAM (/sam) : contacts du groupe, partage de position, alerte
+  SMS discrete avec lien GPS, rappels et urgences.
+- Passeport ferias (/passeport) : tampon par feria via check-in
+  geolocalise (< 3 km pendant les dates), badges par paliers, defis
+  photos.
+- Categorie "Ombre" sur la carte (parcs et jardins OSM).
+- Pack communautaire (/communaute, compte requis, migration
+  0002_community.sql) : rencontres par feria avec Instagram revele
+  uniquement en cas de like mutuel (policy RLS dediee, pas de chat
+  interne a moderer), fil de bons plans, covoiturage aller/retour.
+  Profil declare 18+, suppression RGPD en un tap.
+- MCP PostHog et Sentry ajoutes a la config Claude du projet.
+
 ## [0.2.0] - 2026-07-11
 
 - Rebrand complet sur le logo officiel (pin de localisation navy
