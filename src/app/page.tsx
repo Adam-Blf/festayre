@@ -66,15 +66,42 @@ export default function HomePage() {
         ))}
       </section>
 
-      {/* Acces checklist + compte + carte QR Insta. */}
+      {/* Acces aux outils du festayre. */}
       <nav className="mt-8 grid grid-cols-2 gap-3">
         <Link
-          href="/checklist"
-          className="col-span-2 rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          href="/sam"
+          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
-          Checklist de survie
+          Mode SAM
           <span className="block text-xs font-normal text-muted">
-            À cocher avant de partir en féria
+            Groupe, position, alerte
+          </span>
+        </Link>
+        <Link
+          href="/passeport"
+          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+        >
+          Passeport
+          <span className="block text-xs font-normal text-muted">
+            Tampons, badges, défis
+          </span>
+        </Link>
+        <Link
+          href="/communaute"
+          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+        >
+          Communauté
+          <span className="block text-xs font-normal text-muted">
+            Rencontres, fil, covoit
+          </span>
+        </Link>
+        <Link
+          href="/checklist"
+          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+        >
+          Checklist
+          <span className="block text-xs font-normal text-muted">
+            À cocher avant de partir
           </span>
         </Link>
         <Link
