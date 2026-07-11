@@ -23,6 +23,7 @@ Chaque ligne est VERIFIEE, pas déclarative.
 | Anti-clickjacking, nosniff, referrer, permissions | OK | next.config.ts |
 | Secrets hors git | OK | .env* gitignore + patterns defense en profondeur |
 | Degradation gracieuse sans cles | OK | mode invite complet |
+| Preuve E2E des policies (12 checks dont 3 negatifs) | OK | scripts/e2e_community.mjs, 12/12 le 2026-07-11 |
 
 ## Compromis assumes (a re-evaluer)
 
