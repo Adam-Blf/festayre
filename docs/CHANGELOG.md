@@ -2,6 +2,19 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.5.0] - 2026-07-11
+
+- Onboarding premiere ouverture (/bienvenue) : 3 ecrans, creation de
+  compte magic link proposee, jamais imposee ("Continuer sans compte").
+- Fond blanc pur en mode clair (regle de marque), icones PWA et
+  manifest regeneres sur fond blanc.
+- Nouveaux assets de marque : wordmark FESTAYRE (police Badger, FEST
+  navy / AYRE rouge) detoure + lockup vertical.
+- Infra activee : projet Supabase "festayre" (eu-west-3) provisionne,
+  3 migrations appliquees, auth configuree sur festayre.vercel.app.
+  Stripe live : produit Festayre+ (2,99 EUR), webhook signe. Env vars
+  Vercel production + preview.
+
 ## [0.4.0] - 2026-07-11
 
 - Messagerie interne (/communaute) : conversation privee entre matchs
