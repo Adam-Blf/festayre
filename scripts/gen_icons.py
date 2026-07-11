@@ -9,11 +9,11 @@ Sorties : public/icons/icon-192.png, icon-512.png,
 """
 from PIL import Image, ImageDraw
 
-CREAM = (250, 246, 240, 255)  # fond blanc casse de la marque
+WHITE_BG = (255, 255, 255, 255)  # fond blanc, regle de marque
 MARK = "scripts/logo-mark.png"
 
 def compose(size: int, mark_ratio: float, rounded: bool) -> Image.Image:
-    """Pose le logo centre sur un fond creme.
+    """Pose le logo centre sur un fond blanc.
 
     mark_ratio : part du canevas occupee par le logo. Les icones
     maskable exigent une "safe zone" (logo reduit a ~62 %), Android
@@ -22,9 +22,9 @@ def compose(size: int, mark_ratio: float, rounded: bool) -> Image.Image:
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     if rounded:
-        d.rounded_rectangle([0, 0, size - 1, size - 1], radius=int(size * 0.22), fill=CREAM)
+        d.rounded_rectangle([0, 0, size - 1, size - 1], radius=int(size * 0.22), fill=WHITE_BG)
     else:
-        d.rectangle([0, 0, size, size], fill=CREAM)
+        d.rectangle([0, 0, size, size], fill=WHITE_BG)
 
     mark = Image.open(MARK).convert("RGBA")
     # L'export de la marque a un fond noir plein au lieu d'alpha :
