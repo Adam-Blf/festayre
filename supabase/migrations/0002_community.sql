@@ -52,22 +52,8 @@ create table if not exists public.profile_contacts (
 
 alter table public.profile_contacts enable row level security;
 
--- Lecture : soi-meme, OU like mutuel (le match revele le contact).
-create policy "contacts_select_match"
-  on public.profile_contacts for select
-  using (
-    auth.uid() = user_id
-    or (
-      exists (
-        select 1 from public.likes l1
-        where l1.liker_id = auth.uid() and l1.liked_id = user_id
-      )
-      and exists (
-        select 1 from public.likes l2
-        where l2.liker_id = user_id and l2.liked_id = auth.uid()
-      )
-    )
-  );
+-- NB : la policy de lecture depend de public.likes, elle est creee
+-- plus bas, apres la table likes.
 
 create policy "contacts_insert_own"
   on public.profile_contacts for insert
@@ -108,6 +94,24 @@ create policy "likes_insert_own"
 create policy "likes_delete_own"
   on public.likes for delete
   using (auth.uid() = liker_id);
+
+-- Lecture : soi-meme, OU like mutuel (le match revele le contact).
+create policy "contacts_select_match"
+  on public.profile_contacts for select
+  using (
+    auth.uid() = user_id
+    or (
+      exists (
+        select 1 from public.likes l1
+        where l1.liker_id = auth.uid() and l1.liked_id = user_id
+      )
+      and exists (
+        select 1 from public.likes l2
+        where l2.liker_id = user_id and l2.liked_id = auth.uid()
+      )
+    )
+  );
+
 
 -- =====================================================================
 -- posts : fil de discussion par feria (texte court, compte requis).
