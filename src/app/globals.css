@@ -1,26 +1,79 @@
 @import "tailwindcss";
 
+/*
+ * Design system Festayre.
+ * Univers visuel : l'affiche de feria, blanc casse + rouge sang + encre.
+ * Le rouge est LA couleur du Sud-Ouest en fete (foulard, ceinture),
+ * on l'assume en couleur primaire, pas en simple accent.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf6f0;   /* blanc casse, papier d'affiche */
+  --foreground: #1c1414;   /* encre chaude, pas un noir pur */
+  --card: #ffffff;
+  --card-border: #e8ded2;
+  --festa-red: #c8102e;    /* rouge foulard */
+  --festa-red-deep: #8f0b20;
+  --festa-green: #007a53;  /* clin d'oeil vert basque */
+  --muted: #7a6a60;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-festa-red: var(--festa-red);
+  --color-festa-red-deep: var(--festa-red-deep);
+  --color-festa-green: var(--festa-green);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
 }
 
+/* Dark mode automatique : nuit de feria, encre inversee, rouge ravive. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #171011;
+    --foreground: #f4ece2;
+    --card: #221718;
+    --card-border: #3a2a2c;
+    --festa-red: #ff3b52;
+    --festa-red-deep: #c8102e;
+    --festa-green: #2fbd8f;
+    --muted: #a89388;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
+
+/* Titres facon affiche de feria : gras, serres, majuscules. */
+.display {
+  font-family: var(--font-display), var(--font-body), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+
+/* Pastille "EN CE MOMENT" qui pulse doucement. */
+@keyframes livePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(200 16 46 / 0.45); }
+  50% { box-shadow: 0 0 0 8px rgb(200 16 46 / 0); }
+}
+.live-pulse { animation: livePulse 1.8s ease-in-out infinite; }
+
+/* Marqueur "vous etes ici" sur la carte Leaflet. */
+.user-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #2563eb;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 2px rgb(37 99 235 / 0.35);
+}
+
+/* La carte Leaflet doit rester sous les overlays de l'app. */
+.leaflet-container { z-index: 0; font: inherit; }
