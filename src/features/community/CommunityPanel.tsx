@@ -25,7 +25,23 @@ type Profile = {
   display_name: string;
   bio: string | null;
   is_adult: boolean;
+  first_name: string | null;
+  city: string | null;
+  birthdate: string | null;
+  gender: string | null;
+  looking_for: string | null;
+  photo_path: string | null;
 };
+
+/** Age revolu depuis une date ISO, null si non renseignee. */
+function ageFrom(birthdate: string | null): number | null {
+  if (!birthdate) return null;
+  const b = new Date(birthdate);
+  const now = new Date();
+  let age = now.getFullYear() - b.getFullYear();
+  if (now < new Date(now.getFullYear(), b.getMonth(), b.getDate())) age -= 1;
+  return age;
+}
 
 type Post = { id: string; user_id: string; content: string; created_at: string };
 type Ride = {
@@ -71,8 +87,15 @@ export default function CommunityPanel() {
 
   // Formulaires.
   const [formName, setFormName] = useState("");
+  const [formFirst, setFormFirst] = useState("");
+  const [formLast, setFormLast] = useState("");
+  const [formCity, setFormCity] = useState("");
+  const [formBirth, setFormBirth] = useState("");
+  const [formGender, setFormGender] = useState("");
+  const [formLooking, setFormLooking] = useState("");
   const [formBio, setFormBio] = useState("");
   const [formInsta, setFormInsta] = useState("");
+  const [formPhoto, setFormPhoto] = useState<File | null>(null);
   const [formAdult, setFormAdult] = useState(false);
   const [postText, setPostText] = useState("");
   const [rideDirection, setRideDirection] = useState<"aller" | "retour">("retour");
@@ -90,7 +113,7 @@ export default function CommunityPanel() {
     if (!supabase || !user) return;
     supabase
       .from("community_profiles")
-      .select("user_id, display_name, bio, is_adult")
+      .select("user_id, display_name, bio, is_adult, first_name, city, birthdate, gender, looking_for, photo_path")
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
@@ -108,7 +131,7 @@ export default function CommunityPanel() {
       // 1. Tous les profils 18+ sauf le mien.
       const { data: rows } = await supabase
         .from("community_profiles")
-        .select("user_id, display_name, bio, is_adult")
+        .select("user_id, display_name, bio, is_adult, first_name, city, birthdate, gender, looking_for, photo_path")
         .eq("is_adult", true)
         .neq("user_id", user.id)
         .limit(100);
@@ -245,10 +268,38 @@ export default function CommunityPanel() {
       setStatus("La communauté Festayre est réservée aux majeurs.");
       return;
     }
+    const age = ageFrom(formBirth);
+    if (age === null || age < 18) {
+      setStatus("Date de naissance requise, 18 ans minimum.");
+      return;
+    }
+
+    // Photo d'abord : la policy Storage impose le dossier {user_id}/,
+    // un client modifie ne peut pas ecrire ailleurs.
+    let photoPath: string | null = myProfile?.photo_path ?? null;
+    if (formPhoto) {
+      const path = `${user.id}/avatar-${Date.now()}.jpg`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, formPhoto, { upsert: true, contentType: formPhoto.type });
+      if (upErr) {
+        setStatus("Photo refusée (format image attendu).");
+        return;
+      }
+      photoPath = path;
+    }
+
     const { error } = await supabase.from("community_profiles").upsert({
       user_id: user.id,
       display_name: formName.trim(),
+      first_name: formFirst.trim() || null,
+      last_name: formLast.trim() || null,
+      city: formCity.trim() || null,
+      birthdate: formBirth,
+      gender: formGender || null,
+      looking_for: formLooking || null,
       bio: formBio.trim() || null,
+      photo_path: photoPath,
       is_adult: formAdult,
     });
     if (!error && formInsta.trim()) {
@@ -266,6 +317,12 @@ export default function CommunityPanel() {
         display_name: formName.trim(),
         bio: formBio.trim() || null,
         is_adult: true,
+        first_name: formFirst.trim() || null,
+        city: formCity.trim() || null,
+        birthdate: formBirth,
+        gender: formGender || null,
+        looking_for: formLooking || null,
+        photo_path: null,
       });
     }
   };
@@ -317,6 +374,12 @@ export default function CommunityPanel() {
     }
   };
 
+  /** URL publique d'une photo de profil (bucket avatars public). */
+  const photoUrl = (path: string | null) =>
+    path && supabase
+      ? supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl
+      : null;
+
   /* ---- Rendus des etats bloquants ----------------------------------- */
 
   if (!isSupabaseConfigured()) {
@@ -348,17 +411,82 @@ export default function CommunityPanel() {
       <div className="rounded-xl border border-card-border bg-card p-4">
         <h2 className="display text-lg text-festa-red">Créer mon profil</h2>
         <div className="mt-3 space-y-2">
+          <div className="flex gap-2">
+            <input
+              value={formFirst}
+              onChange={(e) => setFormFirst(e.target.value)}
+              placeholder="Prénom"
+              autoComplete="given-name"
+              className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-3 text-sm"
+            />
+            <input
+              value={formLast}
+              onChange={(e) => setFormLast(e.target.value)}
+              placeholder="Nom"
+              autoComplete="family-name"
+              className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-3 text-sm"
+            />
+          </div>
           <input
             value={formName}
             onChange={(e) => setFormName(e.target.value)}
             placeholder="Pseudo (visible par tous)"
-            className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm"
+            className="min-h-11 w-full rounded-lg border border-card-border bg-background px-3 text-sm"
           />
+          <div className="flex gap-2">
+            <input
+              value={formCity}
+              onChange={(e) => setFormCity(e.target.value)}
+              placeholder="Ville"
+              autoComplete="address-level2"
+              className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-3 text-sm"
+            />
+            <input
+              type="date"
+              value={formBirth}
+              onChange={(e) => setFormBirth(e.target.value)}
+              aria-label="Date de naissance"
+              className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-3 text-sm"
+            />
+          </div>
+          <div className="flex gap-2">
+            <select
+              value={formGender}
+              onChange={(e) => setFormGender(e.target.value)}
+              aria-label="Genre"
+              className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-2 text-sm"
+            >
+              <option value="">Genre (optionnel)</option>
+              <option value="femme">Femme</option>
+              <option value="homme">Homme</option>
+              <option value="autre">Autre</option>
+            </select>
+            <select
+              value={formLooking}
+              onChange={(e) => setFormLooking(e.target.value)}
+              aria-label="Recherche"
+              className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-2 text-sm"
+            >
+              <option value="">Recherche (optionnel)</option>
+              <option value="femme">Femmes</option>
+              <option value="homme">Hommes</option>
+              <option value="peu importe">Peu importe</option>
+            </select>
+          </div>
+          <label className="block text-xs font-semibold text-muted">
+            Photo de profil
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFormPhoto(e.target.files?.[0] ?? null)}
+              className="mt-1 block w-full text-xs"
+            />
+          </label>
           <input
             value={formBio}
             onChange={(e) => setFormBio(e.target.value)}
             placeholder="Bio courte (optionnel)"
-            className="w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm"
+            className="min-h-11 w-full rounded-lg border border-card-border bg-background px-3 text-sm"
           />
           <input
             value={formInsta}
@@ -531,8 +659,26 @@ export default function CommunityPanel() {
                 key={p.user_id}
                 className="flex items-center gap-3 rounded-xl border border-card-border bg-card p-3"
               >
+                {photoUrl(p.photo_path) ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={photoUrl(p.photo_path)!}
+                    alt=""
+                    className="h-14 w-14 shrink-0 rounded-full border border-card-border object-cover"
+                  />
+                ) : (
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-festa-navy/10 text-lg font-bold text-festa-navy">
+                    {(p.first_name ?? p.display_name).charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold">{p.display_name}</p>
+                  <p className="text-sm font-bold">
+                    {p.first_name ?? p.display_name}
+                    {ageFrom(p.birthdate) !== null && (
+                      <span className="font-normal text-muted">, {ageFrom(p.birthdate)} ans</span>
+                    )}
+                  </p>
+                  {p.city && <p className="text-xs text-muted">{p.city}</p>}
                   {p.bio && <p className="truncate text-xs text-muted">{p.bio}</p>}
                 </div>
                 <button
