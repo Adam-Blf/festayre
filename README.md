@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.5.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.6.0-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -82,7 +82,7 @@ observabilite, copier `.env.example` vers `.env.local` et remplir :
 | Sentry | https://sentry.io, Settings, Projects, Client Keys (DSN) |
 
 Puis appliquer les migrations SQL : `supabase/migrations/0001_init.sql`
-`0002_community.sql` et `0003_messages.sql` (SQL Editor Supabase, ou
+`0002` a `0005` (SQL Editor Supabase, ou
 `supabase db push`).
 
 ## Architecture
@@ -104,6 +104,11 @@ Detail dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 ## Changelog
 
 Voir [docs/CHANGELOG.md](docs/CHANGELOG.md).
+
+## Production et securite
+
+Etat verifie, compromis assumes et process de mise en prod :
+[docs/SECURITY.md](docs/SECURITY.md).
 
 ## Licence
 

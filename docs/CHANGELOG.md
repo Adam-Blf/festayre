@@ -2,6 +2,19 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.6.0] - 2026-07-11
+
+- Auth par mot de passe (inscription/connexion/reinitialisation),
+  confirmation auto pour l'UX feria (compromis documente).
+- Profil rencontre complet : prenom, nom, ville, date de naissance
+  (majorite verifiee par contrainte SQL), genre, recherche, photo de
+  profil (Supabase Storage, ecriture verrouillee au dossier user).
+- Ecrans : reglages (effacement donnees locales), politique de
+  confidentialite, mentions legales, 404 maison.
+- Passe securite production (docs/SECURITY.md) : audit RLS complet,
+  SSL force, lint bucket public corrige (0005), CSP liste blanche,
+  HSTS. Sources : checklist officielle Supabase going-into-prod.
+
 ## [0.5.0] - 2026-07-11
 
 - Onboarding premiere ouverture (/bienvenue) : 3 ecrans, creation de
