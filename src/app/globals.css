@@ -7,10 +7,10 @@
  * couleur d'encre.
  */
 :root {
-  --background: #faf6f0;   /* blanc casse, papier d'affiche */
+  --background: #ffffff;   /* fond blanc, regle de marque */
   --foreground: #15274b;   /* navy du logo officiel */
   --card: #ffffff;
-  --card-border: #e5ddd2;
+  --card-border: #e6e8ee;
   --festa-red: #b80c1d;    /* rouge foulard du logo officiel */
   --festa-navy: #15274b;   /* navy du pin de localisation */
   --festa-green: #007a53;  /* clin d'oeil vert basque */

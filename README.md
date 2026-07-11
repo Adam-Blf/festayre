@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.4.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.5.0-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -47,8 +47,10 @@ et San Fermin en bonus.
 ## Marque
 
 Logo officiel : pin de localisation navy `#15274b` au foulard rouge
-`#b80c1d` (fichiers `public/logo.svg`, `public/logo-full.svg`,
-`public/logo.png`). Icones PWA et favicon regeneres depuis la marque
+`#b80c1d`, wordmark FESTAYRE en police **Badger** (fichiers
+`public/logo.png`, `public/wordmark.png`, `public/logo-lockup.png`,
+sources SVG `public/logo.svg` et `public/logo-full.svg`). Fond
+applicatif blanc pur en mode clair. Icones PWA et favicon regeneres depuis la marque
 via `python scripts/gen_icons.py`. Typo : Anton (titres, style affiche
 de feria) + Archivo (texte).
 

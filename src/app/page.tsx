@@ -9,14 +9,25 @@
  * empilee navy/rouge, logo pin au foulard), puis la liste des
  * billets d'entree.
  */
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ONBOARDING_KEY } from "@/features/onboarding/Onboarding";
 import { motion } from "framer-motion";
 import { FERIAS, feriaStatus } from "@/features/ferias/data";
 import FeriaCard from "@/features/ferias/FeriaCard";
 import { APP_VERSION } from "@/lib/version";
 
 export default function HomePage() {
+  const router = useRouter();
+
+  // Premiere ouverture : on passe par l'onboarding (standard app
+  // mobile). Le flag localStorage evite la boucle.
+  useEffect(() => {
+    if (!localStorage.getItem(ONBOARDING_KEY)) router.replace("/bienvenue");
+  }, [router]);
+
   // Tri metier : live > a venir (chronologique) > passees.
   const rank = { live: 0, upcoming: 1, past: 2 } as const;
   const sorted = [...FERIAS].sort((a, b) => {
