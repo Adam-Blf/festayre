@@ -36,6 +36,14 @@ type Ride = {
   seats: number;
 };
 
+type Message = {
+  id: string;
+  sender_id: string;
+  recipient_id: string;
+  content: string;
+  created_at: string;
+};
+
 type Tab = "rencontres" | "fil" | "covoit";
 
 export default function CommunityPanel() {
@@ -54,6 +62,10 @@ export default function CommunityPanel() {
   const [myLikes, setMyLikes] = useState<Set<string>>(new Set());
   const [matches, setMatches] = useState<{ profile: Profile; instagram: string }[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
+  // Conversation ouverte (user_id du match) + messages + brouillon.
+  const [chatWith, setChatWith] = useState<{ id: string; name: string } | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [chatText, setChatText] = useState("");
   const [rides, setRides] = useState<Ride[]>([]);
   const [names, setNames] = useState<Record<string, string>>({});
 
@@ -180,6 +192,50 @@ export default function CommunityPanel() {
         setNames((prev) => ({ ...prev, ...add }));
       });
   }, [supabase, posts, rides, names]);
+
+  /* ---- Messagerie interne (matchs uniquement) ----------------------- */
+
+  const loadMessages = useCallback(async () => {
+    if (!supabase || !user || !chatWith) return;
+    // La RLS ne renvoie que les messages dont on fait partie : le
+    // filtre or() ne sert qu'a isoler CETTE conversation.
+    const { data } = await supabase
+      .from("messages")
+      .select("id, sender_id, recipient_id, content, created_at")
+      .or(
+        `and(sender_id.eq.${user.id},recipient_id.eq.${chatWith.id}),` +
+          `and(sender_id.eq.${chatWith.id},recipient_id.eq.${user.id})`
+      )
+      .order("created_at", { ascending: true })
+      .limit(200);
+    setMessages((data ?? []) as Message[]);
+  }, [supabase, user, chatWith]);
+
+  // Polling leger tant que la conversation est ouverte (8 s, suffisant
+  // pour une messagerie de feria, economise la batterie).
+  useEffect(() => {
+    if (!chatWith) return;
+    loadMessages();
+    const timer = setInterval(loadMessages, 8000);
+    return () => clearInterval(timer);
+  }, [chatWith, loadMessages]);
+
+  const sendMessage = async () => {
+    if (!supabase || !user || !chatWith || !chatText.trim()) return;
+    // La policy messages_insert_matched refuse cote base tout envoi
+    // hors match : pas besoin de re-verifier ici.
+    const { error } = await supabase.from("messages").insert({
+      sender_id: user.id,
+      recipient_id: chatWith.id,
+      content: chatText.trim(),
+    });
+    if (error) {
+      setStatus("Envoi refusé (le match existe toujours ?).");
+    } else {
+      setChatText("");
+      loadMessages();
+    }
+  };
 
   /* ---- Actions ------------------------------------------------------ */
 
@@ -382,8 +438,61 @@ export default function CommunityPanel() {
         </p>
       )}
 
+      {/* ---- Conversation ouverte (remplace l'onglet) ---- */}
+      {chatWith && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setChatWith(null)}
+              aria-label="Fermer la conversation"
+              className="-ml-2 flex h-11 w-11 items-center justify-center text-2xl font-bold"
+            >
+              {"<"}
+            </button>
+            <h3 className="display text-lg text-festa-red">{chatWith.name}</h3>
+          </div>
+
+          <div className="max-h-[50vh] space-y-2 overflow-y-auto rounded-xl border border-card-border bg-card p-3">
+            {messages.map((m) => (
+              <p
+                key={m.id}
+                className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
+                  m.sender_id === user.id
+                    ? "ml-auto bg-festa-red text-white"
+                    : "bg-background"
+                }`}
+              >
+                {m.content}
+              </p>
+            ))}
+            {messages.length === 0 && (
+              <p className="p-4 text-center text-xs text-muted">
+                C'est un match. À toi d'ouvrir le bal.
+              </p>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              value={chatText}
+              onChange={(e) => setChatText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              maxLength={500}
+              placeholder="Ton message..."
+              className="min-h-11 flex-1 rounded-lg border border-card-border bg-card px-3 text-sm"
+            />
+            <button
+              onClick={sendMessage}
+              className="min-h-11 rounded-lg bg-festa-red px-4 text-sm font-bold text-white"
+            >
+              Envoyer
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ---- Rencontres ---- */}
-      {tab === "rencontres" && (
+      {!chatWith && tab === "rencontres" && (
         <div className="space-y-4">
           {matches.length > 0 && (
             <section className="rounded-xl border border-festa-green bg-festa-green/5 p-4">
@@ -391,7 +500,17 @@ export default function CommunityPanel() {
               <ul className="mt-2 space-y-2">
                 {matches.map(({ profile, instagram }) => (
                   <li key={profile.user_id} className="flex items-center justify-between gap-2 text-sm">
-                    <span className="font-semibold">{profile.display_name}</span>
+                    <span className="min-w-0 flex-1 truncate font-semibold">
+                      {profile.display_name}
+                    </span>
+                    <button
+                      onClick={() =>
+                        setChatWith({ id: profile.user_id, name: profile.display_name })
+                      }
+                      className="flex min-h-11 items-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white"
+                    >
+                      Messages
+                    </button>
                     <a
                       href={`https://instagram.com/${instagram}`}
                       target="_blank"
@@ -443,7 +562,7 @@ export default function CommunityPanel() {
       )}
 
       {/* ---- Fil ---- */}
-      {tab === "fil" && (
+      {!chatWith && tab === "fil" && (
         <div className="space-y-3">
           <div className="flex gap-2">
             <input
@@ -480,7 +599,7 @@ export default function CommunityPanel() {
       )}
 
       {/* ---- Covoit ---- */}
-      {tab === "covoit" && (
+      {!chatWith && tab === "covoit" && (
         <div className="space-y-3">
           <div className="rounded-xl border border-card-border bg-card p-3">
             <div className="flex gap-2">

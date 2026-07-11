@@ -2,6 +2,13 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.4.0] - 2026-07-11
+
+- Messagerie interne (/communaute) : conversation privee entre matchs
+  UNIQUEMENT. La policy RLS d'insertion (0003_messages.sql) exige le
+  like mutuel cote base : aucun message non sollicite possible, meme
+  avec un client modifie. Polling 8 s, suppression de ses messages.
+
 ## [0.3.0] - 2026-07-11
 
 - Point de RDV du groupe : epingle sur la carte (localStorage par
