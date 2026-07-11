@@ -18,6 +18,8 @@ export default function AccountPanel() {
   const [user, setUser] = useState<User | null>(null);
   const [isPlus, setIsPlus] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signupMode, setSignupMode] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -47,20 +49,37 @@ export default function AccountPanel() {
       .then(({ data }) => setIsPlus(Boolean(data?.length)));
   }, [supabase, user]);
 
-  /** Envoi du lien magique de connexion. */
-  const signIn = useCallback(async () => {
-    if (!supabase || !email) return;
+  /**
+   * Connexion / inscription par email + mot de passe.
+   * L'inscription connecte directement (confirmation auto activee) :
+   * pas d'aller-retour email en pleine feria.
+   */
+  const submitAuth = useCallback(async () => {
+    if (!supabase || !email || password.length < 8) return;
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: window.location.origin + "/compte" },
-    });
+    const { error } = signupMode
+      ? await supabase.auth.signUp({ email, password })
+      : await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    setMessage(
-      error
-        ? "Envoi impossible, vérifie l'adresse email."
-        : "Lien de connexion envoyé, vérifie ta boîte mail."
-    );
+    if (error) {
+      setMessage(
+        signupMode
+          ? "Inscription impossible (email déjà utilisé ou mot de passe trop court)."
+          : "Identifiants incorrects."
+      );
+    }
+  }, [supabase, email, password, signupMode]);
+
+  /** Mot de passe oublié : lien de réinitialisation par email. */
+  const resetPassword = useCallback(async () => {
+    if (!supabase || !email.includes("@")) {
+      setMessage("Renseigne ton email d'abord.");
+      return;
+    }
+    await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + "/compte",
+    });
+    setMessage("Email de réinitialisation envoyé.");
   }, [supabase, email]);
 
   /** Lancement du paiement Stripe Checkout. */
@@ -91,29 +110,55 @@ export default function AccountPanel() {
     );
   }
 
-  // Etat 2 : connexion par lien magique.
+  // Etat 2 : connexion ou inscription par email + mot de passe.
   if (!user) {
     return (
       <div className="rounded-xl border border-card-border bg-card p-4">
-        <h2 className="display text-lg font-extrabold">Connexion</h2>
-        <p className="mt-1 text-sm text-muted">
-          Un email, un lien, zéro mot de passe.
-        </p>
+        {/* Bascule connexion / inscription. */}
+        <div className="flex rounded-lg border border-card-border text-sm font-bold">
+          <button
+            onClick={() => setSignupMode(false)}
+            className={`min-h-11 flex-1 rounded-lg ${!signupMode ? "bg-festa-red text-white" : "text-muted"}`}
+          >
+            Connexion
+          </button>
+          <button
+            onClick={() => setSignupMode(true)}
+            className={`min-h-11 flex-1 rounded-lg ${signupMode ? "bg-festa-red text-white" : "text-muted"}`}
+          >
+            Inscription
+          </button>
+        </div>
+
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="ton@email.fr"
           autoComplete="email"
-          className="mt-3 w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm"
+          className="mt-3 w-full rounded-lg border border-card-border bg-background px-3 py-3 text-sm"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && submitAuth()}
+          placeholder="Mot de passe (8 caractères min)"
+          autoComplete={signupMode ? "new-password" : "current-password"}
+          className="mt-2 w-full rounded-lg border border-card-border bg-background px-3 py-3 text-sm"
         />
         <button
-          onClick={signIn}
-          disabled={busy || !email.includes("@")}
-          className="mt-2 w-full rounded-lg bg-festa-red py-2.5 text-sm font-bold text-white disabled:opacity-50"
+          onClick={submitAuth}
+          disabled={busy || !email.includes("@") || password.length < 8}
+          className="mt-2 w-full rounded-lg bg-festa-red py-3 text-sm font-bold text-white disabled:opacity-50"
         >
-          {busy ? "Envoi..." : "Recevoir mon lien de connexion"}
+          {busy ? "..." : signupMode ? "Créer mon compte" : "Me connecter"}
         </button>
+        {!signupMode && (
+          <button onClick={resetPassword} className="mt-2 w-full text-xs text-muted underline">
+            Mot de passe oublié
+          </button>
+        )}
         {message && <p className="mt-2 text-xs text-muted">{message}</p>}
       </div>
     );
