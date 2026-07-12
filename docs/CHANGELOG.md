@@ -2,6 +2,12 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.8.0] - 2026-07-12
+
+- Mode SAM : compteur d'hydratation. Bouton "tournee d'eau faite",
+  temps ecoule depuis la derniere tournee, alerte visuelle passe 2 h
+  (logique pure testee a la minute pres, 4 tests unitaires).
+
 ## [0.7.0] - 2026-07-12
 
 - Messagerie : statut lu / non lu (0006_message_read.sql). Marquage lu
