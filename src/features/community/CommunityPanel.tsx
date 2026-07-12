@@ -50,6 +50,17 @@ type Ride = {
   direction: "aller" | "retour";
   detail: string;
   seats: number;
+  contact: string | null;
+};
+
+type LostFound = {
+  id: string;
+  user_id: string;
+  kind: "perdu" | "trouve";
+  item: string;
+  place: string | null;
+  contact: string | null;
+  resolved: boolean;
 };
 
 type Message = {
@@ -60,7 +71,7 @@ type Message = {
   created_at: string;
 };
 
-type Tab = "rencontres" | "fil" | "covoit";
+type Tab = "rencontres" | "fil" | "covoit" | "objets";
 
 export default function CommunityPanel() {
   const supabase = getSupabaseBrowser();
@@ -88,6 +99,11 @@ export default function CommunityPanel() {
   const [reporting, setReporting] = useState<{ type: "profile" | "post"; id: string } | null>(null);
   const [reportReason, setReportReason] = useState("");
   const [rides, setRides] = useState<Ride[]>([]);
+  const [lostFound, setLostFound] = useState<LostFound[]>([]);
+  const [lfKind, setLfKind] = useState<"perdu" | "trouve">("perdu");
+  const [lfItem, setLfItem] = useState("");
+  const [lfPlace, setLfPlace] = useState("");
+  const [lfContact, setLfContact] = useState("");
   const [names, setNames] = useState<Record<string, string>>({});
 
   // Formulaires.
@@ -106,6 +122,7 @@ export default function CommunityPanel() {
   const [rideDirection, setRideDirection] = useState<"aller" | "retour">("retour");
   const [rideDetail, setRideDetail] = useState("");
   const [rideSeats, setRideSeats] = useState(2);
+  const [rideContact, setRideContact] = useState("");
 
   /* ---- Session + profil ------------------------------------------- */
 
@@ -193,11 +210,21 @@ export default function CommunityPanel() {
     if (tab === "covoit") {
       const { data } = await supabase
         .from("rides")
-        .select("id, user_id, direction, detail, seats")
+        .select("id, user_id, direction, detail, seats, contact")
         .eq("feria_id", feriaId)
         .order("created_at", { ascending: false })
         .limit(50);
       setRides((data ?? []) as Ride[]);
+    }
+
+    if (tab === "objets") {
+      const { data } = await supabase
+        .from("lost_found")
+        .select("id, user_id, kind, item, place, contact, resolved")
+        .eq("feria_id", feriaId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      setLostFound((data ?? []) as LostFound[]);
     }
   }, [supabase, user, tab, feriaId]);
 
@@ -208,7 +235,7 @@ export default function CommunityPanel() {
   // Pseudos des auteurs du fil / covoit (une requete groupee).
   useEffect(() => {
     if (!supabase) return;
-    const ids = [...new Set([...posts.map((p) => p.user_id), ...rides.map((r) => r.user_id)])];
+    const ids = [...new Set([...posts.map((p) => p.user_id), ...rides.map((r) => r.user_id), ...lostFound.map((o) => o.user_id)])];
     const missing = ids.filter((id) => !names[id]);
     if (!missing.length) return;
     supabase
@@ -220,7 +247,7 @@ export default function CommunityPanel() {
         for (const row of data ?? []) add[row.user_id as string] = row.display_name as string;
         setNames((prev) => ({ ...prev, ...add }));
       });
-  }, [supabase, posts, rides, names]);
+  }, [supabase, posts, rides, lostFound, names]);
 
   /* ---- Messagerie interne (matchs uniquement) ----------------------- */
 
@@ -424,6 +451,7 @@ export default function CommunityPanel() {
       direction: rideDirection,
       detail: rideDetail.trim(),
       seats: rideSeats,
+      contact: rideContact.trim() || null,
     });
     if (!error) {
       setRideDetail("");
@@ -436,6 +464,31 @@ export default function CommunityPanel() {
     path && supabase
       ? supabase.storage.from("avatars").getPublicUrl(path).data.publicUrl
       : null;
+
+  /** Publie une annonce objet perdu / trouve. */
+  const publishLostFound = async () => {
+    if (!supabase || !user || lfItem.trim().length < 3) return;
+    const { error } = await supabase.from("lost_found").insert({
+      feria_id: feriaId,
+      user_id: user.id,
+      kind: lfKind,
+      item: lfItem.trim(),
+      place: lfPlace.trim() || null,
+      contact: lfContact.trim() || null,
+    });
+    if (!error) {
+      setLfItem("");
+      setLfPlace("");
+      refresh();
+    }
+  };
+
+  /** L'auteur marque son annonce comme resolue. */
+  const resolveLostFound = async (id: string) => {
+    if (!supabase) return;
+    await supabase.from("lost_found").update({ resolved: true }).eq("id", id);
+    refresh();
+  };
 
   /* ---- Rendus des etats bloquants ----------------------------------- */
 
@@ -603,6 +656,7 @@ export default function CommunityPanel() {
             ["rencontres", "Rencontres"],
             ["fil", "Fil"],
             ["covoit", "Covoit"],
+            ["objets", "Objets"],
           ] as [Tab, string][]
         ).map(([id, label]) => {
           const totalUnread = Object.values(unreadBySender).reduce((a, b) => a + b, 0);
@@ -898,6 +952,13 @@ export default function CommunityPanel() {
                 className="min-w-0 flex-1 rounded-lg border border-card-border bg-background px-3 text-sm"
               />
             </div>
+            <input
+              value={rideContact}
+              onChange={(e) => setRideContact(e.target.value)}
+              maxLength={60}
+              placeholder="Contact (insta ou tel, visible par les connectés)"
+              className="mt-2 min-h-11 w-full rounded-lg border border-card-border bg-background px-3 text-sm"
+            />
             <button
               onClick={publishRide}
               className="mt-2 w-full rounded-lg bg-festa-navy py-2.5 text-sm font-bold text-white"
@@ -919,6 +980,7 @@ export default function CommunityPanel() {
                   <p className="text-sm">{r.detail}</p>
                   <p className="text-xs text-muted">
                     {names[r.user_id] ?? "Festayre"}, {r.seats} place{r.seats > 1 ? "s" : ""}
+                    {r.contact && <> - contact : <strong>{r.contact}</strong></>}
                   </p>
                 </div>
                 {r.user_id === user.id && (
@@ -938,6 +1000,93 @@ export default function CommunityPanel() {
             {rides.length === 0 && (
               <p className="p-4 text-center text-sm text-muted">
                 Aucun trajet. Propose le tien, le SAM te bénira.
+              </p>
+            )}
+          </ul>
+        </div>
+      )}
+      {/* ---- Objets perdus / trouves ---- */}
+      {!chatWith && tab === "objets" && (
+        <div className="space-y-3">
+          <div className="rounded-xl border border-card-border bg-card p-3">
+            <div className="flex gap-2">
+              <select
+                value={lfKind}
+                onChange={(e) => setLfKind(e.target.value as "perdu" | "trouve")}
+                aria-label="Perdu ou trouvé"
+                className="min-h-11 rounded-lg border border-card-border bg-background px-2 text-sm"
+              >
+                <option value="perdu">J&apos;ai perdu</option>
+                <option value="trouve">J&apos;ai trouvé</option>
+              </select>
+              <input
+                value={lfItem}
+                onChange={(e) => setLfItem(e.target.value)}
+                maxLength={120}
+                placeholder="Quoi (sac noir, iPhone coque rouge...)"
+                className="min-h-11 min-w-0 flex-1 rounded-lg border border-card-border bg-background px-3 text-sm"
+              />
+            </div>
+            <div className="mt-2 flex gap-2">
+              <input
+                value={lfPlace}
+                onChange={(e) => setLfPlace(e.target.value)}
+                maxLength={120}
+                placeholder="Où (place, bodega...)"
+                className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-3 text-sm"
+              />
+              <input
+                value={lfContact}
+                onChange={(e) => setLfContact(e.target.value)}
+                maxLength={60}
+                placeholder="Contact (visible connectés)"
+                className="min-h-11 w-1/2 rounded-lg border border-card-border bg-background px-3 text-sm"
+              />
+            </div>
+            <button
+              onClick={publishLostFound}
+              disabled={lfItem.trim().length < 3}
+              className="mt-2 w-full rounded-lg bg-festa-navy py-2.5 text-sm font-bold text-white disabled:opacity-50"
+            >
+              Publier l&apos;annonce
+            </button>
+          </div>
+          <ul className="space-y-2">
+            {lostFound.map((o) => (
+              <li
+                key={o.id}
+                className={`flex items-center gap-3 rounded-xl border border-card-border bg-card p-3 ${
+                  o.resolved ? "opacity-50" : ""
+                }`}
+              >
+                <span
+                  className={`stamp shrink-0 ${
+                    o.kind === "perdu" ? "text-festa-red" : "text-festa-green"
+                  }`}
+                >
+                  {o.resolved ? "Résolu" : o.kind === "perdu" ? "Perdu" : "Trouvé"}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold">{o.item}</p>
+                  <p className="text-xs text-muted">
+                    {o.place && <>{o.place} - </>}
+                    {names[o.user_id] ?? "Festayre"}
+                    {o.contact && <> - contact : <strong>{o.contact}</strong></>}
+                  </p>
+                </div>
+                {o.user_id === user.id && !o.resolved && (
+                  <button
+                    onClick={() => resolveLostFound(o.id)}
+                    className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-green px-3 text-xs font-bold text-white"
+                  >
+                    Résolu
+                  </button>
+                )}
+              </li>
+            ))}
+            {lostFound.length === 0 && (
+              <p className="p-4 text-center text-sm text-muted">
+                Rien de perdu, rien de trouvé. Pourvu que ça dure.
               </p>
             )}
           </ul>

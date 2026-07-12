@@ -2,6 +2,15 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.12.0] - 2026-07-12
+
+- Objets perdus / trouves (0009_lost_found.sql) : tableau par feria,
+  annonce perdu/trouve avec lieu et contact optionnels, resolution par
+  l'auteur. Lecture reservee aux connectes, ecriture proprietaire.
+- Covoiturage : champ contact optionnel sur les annonces (visibilite
+  aux connectes rappelee dans le formulaire).
+- E2E communaute : 22 verifications, 22/22 verts sur la prod.
+
 ## [0.11.0] - 2026-07-12
 
 - Signalement des profils et des posts (0008_reports.sql) : un
