@@ -106,12 +106,12 @@ Detail dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ```mermaid
 flowchart TB
-    PWA["PWA Next.js 16<br/>App Router · service worker offline"]
-    PAGES["Pages<br/>carte · feria/id · checklist · communaute · passeport · sam · compte"]
-    FEAT["src/features<br/>ferias · pois · map · program · weather · checklist · account · qr"]
-    API["app/api<br/>checkout · stripe/webhook"]
-    OVER["API Overpass<br/>toilettes · alcool · bus"]
-    SUPA["Supabase<br/>auth · Postgres RLS"]
+    PWA["PWA Next.js 16<br/>App Router - service worker offline"]
+    PAGES["Pages<br/>carte - feria/id - checklist - communaute - passeport - sam - compte"]
+    FEAT["src/features<br/>ferias - pois - map - program - weather - checklist - account - qr"]
+    API["app/api<br/>checkout - stripe/webhook"]
+    OVER["API Overpass<br/>toilettes - alcool - bus"]
+    SUPA["Supabase<br/>auth - Postgres RLS"]
     STRIPE["Stripe<br/>paiement"]
     PWA --> PAGES --> FEAT
     FEAT --> OVER
