@@ -80,6 +80,8 @@ export default function CommunityPanel() {
   const [posts, setPosts] = useState<Post[]>([]);
   // Conversation ouverte (user_id du match) + messages + brouillon.
   const [chatWith, setChatWith] = useState<{ id: string; name: string } | null>(null);
+  // Non-lus par expediteur : { user_id: nombre de messages non lus }.
+  const [unreadBySender, setUnreadBySender] = useState<Record<string, number>>({});
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatText, setChatText] = useState("");
   const [rides, setRides] = useState<Ride[]>([]);
@@ -218,6 +220,28 @@ export default function CommunityPanel() {
 
   /* ---- Messagerie interne (matchs uniquement) ----------------------- */
 
+  /** Recompte les messages non lus, groupes par expediteur. */
+  const refreshUnread = useCallback(async () => {
+    if (!supabase || !user) return;
+    const { data } = await supabase
+      .from("messages")
+      .select("sender_id")
+      .eq("recipient_id", user.id)
+      .is("read_at", null);
+    const counts: Record<string, number> = {};
+    for (const m of data ?? []) {
+      counts[m.sender_id as string] = (counts[m.sender_id as string] ?? 0) + 1;
+    }
+    setUnreadBySender(counts);
+  }, [supabase, user]);
+
+  useEffect(() => {
+    refreshUnread();
+    // Rafraichissement leger en arriere-plan (30 s).
+    const timer = setInterval(refreshUnread, 30000);
+    return () => clearInterval(timer);
+  }, [refreshUnread]);
+
   const loadMessages = useCallback(async () => {
     if (!supabase || !user || !chatWith) return;
     // La RLS ne renvoie que les messages dont on fait partie : le
@@ -232,7 +256,17 @@ export default function CommunityPanel() {
       .order("created_at", { ascending: true })
       .limit(200);
     setMessages((data ?? []) as Message[]);
-  }, [supabase, user, chatWith]);
+
+    // Tout ce que l'autre m'a envoye est desormais lu. Le trigger SQL
+    // garantit que seul read_at peut changer.
+    await supabase
+      .from("messages")
+      .update({ read_at: new Date().toISOString() })
+      .eq("recipient_id", user.id)
+      .eq("sender_id", chatWith.id)
+      .is("read_at", null);
+    refreshUnread();
+  }, [supabase, user, chatWith, refreshUnread]);
 
   // Polling leger tant que la conversation est ouverte (8 s, suffisant
   // pour une messagerie de feria, economise la batterie).
@@ -547,17 +581,25 @@ export default function CommunityPanel() {
             ["fil", "Fil"],
             ["covoit", "Covoit"],
           ] as [Tab, string][]
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            onClick={() => setTab(id)}
-            className={`min-h-11 flex-1 rounded-lg ${
-              tab === id ? "bg-festa-red text-white" : "text-muted"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        ).map(([id, label]) => {
+          const totalUnread = Object.values(unreadBySender).reduce((a, b) => a + b, 0);
+          return (
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              className={`relative min-h-11 flex-1 rounded-lg ${
+                tab === id ? "bg-festa-red text-white" : "text-muted"
+              }`}
+            >
+              {label}
+              {id === "rencontres" && totalUnread > 0 && (
+                <span className="absolute right-2 top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-festa-red px-1 text-[10px] font-bold text-white ring-2 ring-card">
+                  {totalUnread}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </nav>
 
       {status && (
@@ -635,9 +677,14 @@ export default function CommunityPanel() {
                       onClick={() =>
                         setChatWith({ id: profile.user_id, name: profile.display_name })
                       }
-                      className="flex min-h-11 items-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white"
+                      className="relative flex min-h-11 items-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white"
                     >
                       Messages
+                      {(unreadBySender[profile.user_id] ?? 0) > 0 && (
+                        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-festa-red px-1 text-[10px] font-bold text-white">
+                          {unreadBySender[profile.user_id]}
+                        </span>
+                      )}
                     </button>
                     <a
                       href={`https://instagram.com/${instagram}`}

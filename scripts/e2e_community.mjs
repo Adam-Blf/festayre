@@ -104,8 +104,17 @@ async function main() {
     check("message apres match accepte", !msgErr, msgErr?.message);
 
     const { data: inbox } = await clientB
-      .from("messages").select("content").eq("recipient_id", idB);
+      .from("messages").select("id, content, read_at").eq("recipient_id", idB);
     check("message recu par B", inbox?.[0]?.content?.includes("bodegas"));
+    check("message non lu a la reception", inbox?.[0]?.read_at === null);
+
+    // B marque lu : autorise. B modifie le contenu : bloque (trigger).
+    const { error: readErr } = await clientB.from("messages")
+      .update({ read_at: new Date().toISOString() }).eq("id", inbox[0].id);
+    check("marquage lu par le destinataire", !readErr, readErr?.message);
+    const { error: tamper } = await clientB.from("messages")
+      .update({ content: "contenu falsifie" }).eq("id", inbox[0].id);
+    check("falsification du contenu bloquee par le trigger", Boolean(tamper));
 
     // Bonus : un profil mineur doit etre refuse par la contrainte SQL.
     const { error: minor } = await clientA.from("community_profiles")

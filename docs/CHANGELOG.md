@@ -2,6 +2,16 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.7.0] - 2026-07-12
+
+- Messagerie : statut lu / non lu (0006_message_read.sql). Marquage lu
+  a l'ouverture de la conversation, badges de non-lus par match et sur
+  l'onglet Rencontres (rafraichissement 30 s).
+- Securite : trigger SQL messages_protect_update, le destinataire ne
+  peut modifier QUE read_at, toute alteration du contenu est rejetee.
+- E2E etendu a 15 verifications (lu/non-lu + falsification bloquee),
+  15/15 verts sur la prod.
+
 ## [0.6.1] - 2026-07-11
 
 - Script E2E communaute (scripts/e2e_community.mjs) : 12 verifications
