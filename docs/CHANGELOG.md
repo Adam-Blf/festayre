@@ -2,6 +2,15 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.10.0] - 2026-07-12
+
+- Sync multi-appareils Festayre+ (0007_plus_sync.sql) : passeport
+  (tampons + defis) et checklist suivent le compte, last-write-wins.
+  Ecriture reservee aux acheteurs festayre_plus, verifiee par la RLS
+  (policy avec exists sur purchases), lecture conservee apres
+  desabonnement (RGPD). E2E dedie 6/6 verts sur la prod, dont le refus
+  d'ecriture sans achat.
+
 ## [0.9.0] - 2026-07-12
 
 - i18n FR / ES / EN sur le coeur touristique : onglets de la page

@@ -13,6 +13,7 @@
  */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useCloudSync } from "@/features/sync/cloudSync";
 
 type Item = {
   id: string;
@@ -52,6 +53,8 @@ export default function ChecklistPanel() {
   const [items, setItems] = useState<Item[]>([]);
   const [newLabel, setNewLabel] = useState("");
   const [loaded, setLoaded] = useState(false);
+  // Sync multi-appareils Festayre+ (last-write-wins).
+  const sync = useCloudSync("checklist");
 
   // Lecture au montage (localStorage n'existe pas cote serveur).
   useEffect(() => {
@@ -64,10 +67,18 @@ export default function ChecklistPanel() {
     setLoaded(true);
   }, []);
 
-  // Sauvegarde a chaque changement, une fois charge.
+  // Etat distant Festayre+ : il remplace le local au montage.
   useEffect(() => {
-    if (loaded) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items, loaded]);
+    if (!sync.remote || !Array.isArray(sync.remote)) return;
+    setItems(sync.remote as Item[]);
+  }, [sync.remote]);
+
+  // Sauvegarde a chaque changement, une fois charge (+ push cloud).
+  useEffect(() => {
+    if (!loaded) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    sync.push(items);
+  }, [items, loaded, sync]);
 
   const toggle = (id: string) =>
     setItems((prev) =>
@@ -94,6 +105,11 @@ export default function ChecklistPanel() {
 
   return (
     <div className="space-y-4">
+      {sync.active && (
+        <p className="text-center text-[11px] font-semibold text-festa-green">
+          Synchronisé entre tes appareils (Festayre+)
+        </p>
+      )}
       {/* Barre de progression : pret pour la feria a 100 %. */}
       <div className="rounded-xl border border-card-border bg-card p-3">
         <div className="flex justify-between text-sm font-bold">
