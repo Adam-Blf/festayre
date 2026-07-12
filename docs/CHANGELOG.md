@@ -2,6 +2,16 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.11.0] - 2026-07-12
+
+- Signalement des profils et des posts (0008_reports.sql) : un
+  signalement max par cible (contrainte unique), raisons predefinies.
+- Auto-moderation en base : 3 signaleurs DISTINCTS sur un profil le
+  masquent automatiquement (trigger), sans intervention manuelle. La
+  revue humaine passe par le dashboard (service_role).
+- E2E communaute etendu a 19 verifications (doublon refuse, masquage
+  auto, disparition du browse), 19/19 verts sur la prod.
+
 ## [0.10.0] - 2026-07-12
 
 - Sync multi-appareils Festayre+ (0007_plus_sync.sql) : passeport
