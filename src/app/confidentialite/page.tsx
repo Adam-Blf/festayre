@@ -45,6 +45,17 @@ export default function ConfidentialitePage() {
         </section>
 
         <section>
+          <h2 className="display text-lg text-festa-navy">Position de groupe (opt-in)</h2>
+          <p className="mt-1 text-muted">
+            Si tu rejoins un groupe, ta position est envoyée à nos serveurs
+            (Supabase UE) et visible UNIQUEMENT des membres de ce groupe,
+            seulement quand l&apos;app est ouverte. Elle est supprimée quand tu
+            quittes le groupe. Sans groupe, la position ne quitte jamais ton
+            téléphone.
+          </p>
+        </section>
+
+        <section>
           <h2 className="display text-lg text-festa-navy">Paiement</h2>
           <p className="mt-1 text-muted">
             Le paiement Festayre+ est traité par Stripe. Aucune donnée de

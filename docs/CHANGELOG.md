@@ -2,6 +2,20 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.13.0] - 2026-07-12
+
+- Position live du groupe (0010_groups.sql) : groupe ephemere a code
+  secret 6 caracteres (alphabet sans ambiguite, dictable en bodega),
+  membres avec distance et fraicheur sur /groupe, marqueurs sur la
+  carte de chaque feria. Pointage toutes les 30 s quand l'app est
+  ouverte, jamais en arriere-plan.
+- Vie privee : opt-in explicite, visibilite limitee au groupe par RLS
+  (fonction is_group_member security definer, anti-recursion),
+  position supprimee au depart du groupe, politique de confidentialite
+  mise a jour.
+- E2E dedie scripts/e2e_group.mjs : 8/8 verts sur la prod, dont les 3
+  checks negatifs du non-membre (ni lecture ni ecriture).
+
 ## [0.12.0] - 2026-07-12
 
 - Objets perdus / trouves (0009_lost_found.sql) : tableau par feria,

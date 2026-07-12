@@ -43,9 +43,11 @@ type Props = {
   pois: (Poi & { distanceM: number })[];
   /** Point de RDV du groupe, epingle par l'utilisateur. */
   meetPoint?: LatLng | null;
+  /** Positions live des membres du groupe (prenom + coordonnees). */
+  groupMembers?: { name: string; lat: number; lng: number }[];
 };
 
-export default function FeriaMap({ center, userPosition, pois, meetPoint }: Props) {
+export default function FeriaMap({ center, userPosition, pois, meetPoint, groupMembers }: Props) {
   // La carte s'ouvre sur l'utilisateur s'il est localise, sinon sur
   // le coeur de la feria.
   const mapCenter = userPosition ?? center;
@@ -89,6 +91,24 @@ export default function FeriaMap({ center, userPosition, pois, meetPoint }: Prop
           </Popup>
         </CircleMarker>
       )}
+
+      {/* Membres du groupe : disques navy clair avec prenom. */}
+      {(groupMembers ?? []).map((m) => (
+        <CircleMarker
+          key={`member-${m.name}-${m.lat}`}
+          center={[m.lat, m.lng]}
+          radius={9}
+          pathOptions={{ color: "#ffffff", weight: 2, fillColor: "#4c6ef5", fillOpacity: 1 }}
+        >
+          <Popup>
+            <strong>{m.name}</strong> (ton groupe)
+            <br />
+            <a href={walkingDirectionsUrl(m)} target="_blank" rel="noopener noreferrer">
+              Itinéraire à pied
+            </a>
+          </Popup>
+        </CircleMarker>
+      ))}
 
       {/* Tous les POI, colores par categorie. */}
       {pois.map((poi) => (

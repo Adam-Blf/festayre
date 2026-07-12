@@ -25,6 +25,7 @@ Chaque ligne est VERIFIEE, pas déclarative.
 | Degradation gracieuse sans cles | OK | mode invite complet |
 | Preuve E2E des policies (15 checks dont 4 negatifs) | OK | scripts/e2e_community.mjs, 15/15 le 2026-07-12 |
 | Sync Festayre+ : gating d'achat en base | OK | scripts/e2e_sync.mjs, 6/6 dont refus sans achat |
+| Groupe live : isolation par RLS membership | OK | scripts/e2e_group.mjs, 8/8 dont 3 negatifs non-membre |
 
 ## Compromis assumes (a re-evaluer)
 
