@@ -16,10 +16,18 @@
  * serveur Festayre.
  */
 import { useEffect, useState } from "react";
+import {
+  INITIAL_HYDRATION,
+  isOverdue,
+  recordRound,
+  sinceLabel,
+  type HydrationState,
+} from "./hydration";
 
 type Contact = { id: string; name: string; phone: string };
 
 const STORAGE_KEY = "festayre.sam.contacts.v1";
+const HYDRATION_KEY = "festayre.sam.hydration.v1";
 
 /** Message de l'alerte discrete (volontairement sobre et clair). */
 function alertSms(url: string): string {
@@ -33,15 +41,29 @@ export default function SamPanel() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<string | null>(null);
+  const [hydration, setHydration] = useState<HydrationState>(INITIAL_HYDRATION);
+  // Tic d'horloge minute pour reevaluer le retard sans interaction.
+  const [, setClock] = useState(0);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setContacts(JSON.parse(raw) as Contact[]);
+      const hyd = localStorage.getItem(HYDRATION_KEY);
+      if (hyd) setHydration(JSON.parse(hyd) as HydrationState);
     } catch {
       // Stockage corrompu : on repart de zero, pas de crash.
     }
+    const timer = setInterval(() => setClock((n) => n + 1), 60_000);
+    return () => clearInterval(timer);
   }, []);
+
+  /** Tournee d'eau faite : enregistre et persiste. */
+  const waterRound = () => {
+    const next = recordRound(hydration);
+    setHydration(next);
+    localStorage.setItem(HYDRATION_KEY, JSON.stringify(next));
+  };
 
   const save = (next: Contact[]) => {
     setContacts(next);
@@ -172,12 +194,37 @@ export default function SamPanel() {
         </div>
       </section>
 
+      {/* Hydratation : LE job du SAM. Alerte visuelle passe 2 h. */}
+      <section
+        className={`rounded-xl border p-4 ${
+          isOverdue(hydration)
+            ? "border-festa-red bg-festa-red/10"
+            : "border-card-border bg-card"
+        }`}
+      >
+        <h2 className="display text-lg text-festa-red">Hydratation</h2>
+        <p className="mt-1 text-sm text-muted">
+          Derniere tournee d'eau : <strong>{sinceLabel(hydration)}</strong>
+          {hydration.rounds > 0 && ` (${hydration.rounds} au total)`}
+        </p>
+        {isOverdue(hydration) && (
+          <p role="alert" className="mt-2 text-sm font-bold text-festa-red">
+            Plus de 2 h sans eau : fais boire tout le monde, maintenant.
+          </p>
+        )}
+        <button
+          onClick={waterRound}
+          className="mt-3 min-h-11 w-full rounded-lg bg-festa-green text-sm font-bold text-white"
+        >
+          Tournee d'eau faite
+        </button>
+      </section>
+
       {/* Rappels du SAM + urgences, toujours visibles. */}
       <section className="rounded-xl border border-festa-red/40 bg-festa-red/5 p-4 text-sm">
         <h2 className="display text-lg text-festa-red">Réflexes SAM</h2>
         <ul className="mt-2 list-inside list-disc space-y-1 text-sm">
           <li>Un point de RDV fixé sur la carte de la féria (onglet Carte).</li>
-          <li>De l&apos;eau pour tout le monde toutes les deux heures.</li>
           <li>Personne ne rentre seul, personne ne reste seul en vrac.</li>
         </ul>
         <p className="mt-3 font-semibold">
