@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.8.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.7.0-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -34,8 +34,7 @@ et San Fermin en bonus.
 - [x] Carte QR Instagram a faire scanner
 - [x] PWA installable + mode hors ligne (service worker)
 - [x] Point de RDV du groupe epingle sur la carte + partage en un tap
-- [x] Mode SAM : groupe, partage de position, alerte SMS discrete,
-      compteur d'hydratation avec alerte apres 2 h sans tournee d'eau
+- [x] Mode SAM : groupe, partage de position, alerte SMS discrete
 - [x] Passeport ferias : tampons geolocalises, badges, defis photos
 - [x] Coins d'ombre (parcs) sur la carte
 - [x] Communaute par feria (compte requis) : rencontres avec Instagram
@@ -95,6 +94,23 @@ Code range par domaine metier dans `src/features/` :
 Overpass), `map` (Leaflet + geolocalisation), `program`, `weather`,
 `checklist`, `account` (Supabase + Stripe), `qr`.
 Detail dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+```mermaid
+flowchart TB
+    PWA["PWA Next.js 16<br/>App Router · service worker offline"]
+    PAGES["Pages<br/>carte · feria/id · checklist · communaute · passeport · sam · compte"]
+    FEAT["src/features<br/>ferias · pois · map · program · weather · checklist · account · qr"]
+    API["app/api<br/>checkout · stripe/webhook"]
+    OVER["API Overpass<br/>toilettes · alcool · bus"]
+    SUPA["Supabase<br/>auth · Postgres RLS"]
+    STRIPE["Stripe<br/>paiement"]
+    PWA --> PAGES --> FEAT
+    FEAT --> OVER
+    FEAT --> SUPA
+    PAGES --> API --> STRIPE
+    API --> SUPA
+```
+
 
 ## Securite
 
