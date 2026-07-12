@@ -11,15 +11,17 @@
 import { formatDistance, walkingDirectionsUrl } from "@/lib/geo";
 import type { Poi, PoiCategory } from "./overpass";
 import { TIER_LABELS } from "./overpass";
+import { t, type I18nKey } from "@/features/i18n/translations";
+import { useLang } from "@/features/i18n/useLang";
 
-/** Libelles des onglets, dans l'ordre d'importance terrain. */
-export const CATEGORY_TABS: { id: PoiCategory; label: string }[] = [
-  { id: "toilets", label: "Toilettes" },
-  { id: "booze", label: "Alcool pas cher" },
-  { id: "water", label: "Eau gratuite" },
-  { id: "transport", label: "Bus / navettes" },
-  { id: "shade", label: "Ombre" },
-  { id: "health", label: "Pharmacie" },
+/** Onglets categories, dans l'ordre d'importance terrain (cles i18n). */
+export const CATEGORY_TABS: { id: PoiCategory; labelKey: I18nKey }[] = [
+  { id: "toilets", labelKey: "cat.toilets" },
+  { id: "booze", labelKey: "cat.booze" },
+  { id: "water", labelKey: "cat.water" },
+  { id: "transport", labelKey: "cat.transport" },
+  { id: "shade", labelKey: "cat.shade" },
+  { id: "health", labelKey: "cat.health" },
 ];
 
 type Props = {
@@ -28,6 +30,7 @@ type Props = {
 };
 
 export default function PoiList({ pois, category }: Props) {
+  const [lang] = useLang();
   let items = pois.filter((p) => p.category === category);
 
   // Regle metier alcool : le moins cher d'abord, la distance departage.
@@ -75,10 +78,10 @@ export default function PoiList({ pois, category }: Props) {
             href={walkingDirectionsUrl(poi)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Itinéraire à pied vers ${poi.name}`}
+            aria-label={`${t("action.directions", lang)} : ${poi.name}`}
             className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white"
           >
-            Y aller
+            {t("action.go", lang)}
           </a>
         </li>
       ))}

@@ -18,9 +18,13 @@ import { motion } from "framer-motion";
 import { FERIAS, feriaStatus } from "@/features/ferias/data";
 import FeriaCard from "@/features/ferias/FeriaCard";
 import { APP_VERSION } from "@/lib/version";
+import { t } from "@/features/i18n/translations";
+import { useLang } from "@/features/i18n/useLang";
+import LangSwitcher from "@/features/i18n/LangSwitcher";
 
 export default function HomePage() {
   const router = useRouter();
+  const [lang] = useLang();
 
   // Premiere ouverture : on passe par l'onboarding (standard app
   // mobile). Le flag localStorage evite la boucle.
@@ -46,9 +50,12 @@ export default function HomePage() {
           className="flex items-end justify-between gap-4"
         >
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted">
-              Sud-Ouest, été 2026
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted">
+                Sud-Ouest 2026
+              </p>
+              <LangSwitcher />
+            </div>
             <h1 className="display mt-2 text-5xl leading-[0.92]">
               <span className="block text-festa-navy">Les férias,</span>
               <span className="block text-festa-red">directement</span>
@@ -65,8 +72,9 @@ export default function HomePage() {
           />
         </motion.div>
         <p className="mt-3 text-sm text-muted">
-          Toilettes les plus proches, alcool le moins cher, bus, bracelets,
-          programme et météo. Choisis ta féria.
+          {lang === "fr"
+            ? "Toilettes les plus proches, alcool le moins cher, bus, bracelets, programme et météo. Choisis ta féria."
+            : t("home.tagline", lang)}
         </p>
       </header>
 

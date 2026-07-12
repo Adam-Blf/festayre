@@ -2,6 +2,15 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.9.0] - 2026-07-12
+
+- i18n FR / ES / EN sur le coeur touristique : onglets de la page
+  feria, categories de POI, actions (Y aller, Partager, RDV), section
+  urgences, tagline accueil. Selecteur de langue persistant (accueil
+  + page feria). Dictionnaire type, test d'exhaustivite (aucune cle
+  sans traduction). Perimetre assume : programmes et contenus
+  editoriaux encore en francais.
+
 ## [0.8.0] - 2026-07-12
 
 - Mode SAM : compteur d'hydratation. Bouton "tournee d'eau faite",
