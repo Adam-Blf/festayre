@@ -22,6 +22,9 @@ import ProgramList from "@/features/program/ProgramList";
 import WeatherCard from "@/features/weather/WeatherCard";
 import { useGeolocation } from "@/features/map/useGeolocation";
 import { useMeetPoint } from "@/features/meetpoint/useMeetPoint";
+import { t } from "@/features/i18n/translations";
+import { useLang } from "@/features/i18n/useLang";
+import LangSwitcher from "@/features/i18n/LangSwitcher";
 import { sortByDistance } from "@/lib/geo";
 
 /* Leaflet touche window : chargement navigateur uniquement. */
@@ -38,6 +41,7 @@ type View = "map" | "list" | "program" | "infos";
 
 export default function FeriaPageClient({ feria }: { feria: Feria }) {
   const { position, error: geoError } = useGeolocation();
+  const [lang] = useLang();
   const [pois, setPois] = useState<Poi[] | null>(null);
   const [poisError, setPoisError] = useState(false);
   const [view, setView] = useState<View>("map");
@@ -88,8 +92,11 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
             </p>
           </div>
         </div>
-        <div className="mt-2">
-          <WeatherCard center={feria.center} />
+        <div className="mt-2 flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <WeatherCard center={feria.center} />
+          </div>
+          <LangSwitcher />
         </div>
         {/* Erreur geoloc affichee sans bloquer : mode "centre feria". */}
         {geoError && <p className="mt-1 text-[11px] text-muted">{geoError}</p>}
@@ -99,10 +106,10 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
       <nav className="flex border-b border-card-border bg-card text-sm font-bold">
         {(
           [
-            ["map", "Carte"],
-            ["list", "Liste"],
-            ["program", "Programme"],
-            ["infos", "Infos"],
+            ["map", t("tab.map", lang)],
+            ["list", t("tab.list", lang)],
+            ["program", t("tab.program", lang)],
+            ["infos", t("tab.infos", lang)],
           ] as [View, string][]
         ).map(([id, label]) => (
           <button
@@ -132,7 +139,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   : "border border-card-border bg-card text-muted"
               }`}
             >
-              {tab.label}
+              {t(tab.labelKey, lang)}
             </button>
           ))}
         </div>
@@ -173,7 +180,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                     }}
                     className="flex min-h-11 flex-1 items-center justify-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white shadow-lg"
                   >
-                    {meetPoint ? "Déplacer le RDV ici" : "Fixer le RDV ici"}
+                    {meetPoint ? t("meet.move", lang) : t("meet.set", lang)}
                   </button>
                   {meetPoint && (
                     <>
@@ -181,7 +188,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                         onClick={async () => setMeetMsg(await shareMeetPoint())}
                         className="flex min-h-11 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white shadow-lg"
                       >
-                        Partager
+                        {t("action.share", lang)}
                       </button>
                       <button
                         onClick={() => {
@@ -222,7 +229,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
               <div className="space-y-4 p-4 text-sm">
                 <section className="rounded-xl border border-card-border bg-card p-3">
                   <h3 className="display text-base font-extrabold text-festa-red">
-                    Bracelets / entrée
+                    {t("infos.bracelets", lang)}
                   </h3>
                   <p className="mt-1 leading-snug">
                     {feria.bracelets ??
@@ -231,7 +238,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                 </section>
                 <section className="rounded-xl border border-card-border bg-card p-3">
                   <h3 className="display text-base font-extrabold text-festa-red">
-                    Bus et navettes
+                    {t("infos.shuttles", lang)}
                   </h3>
                   <p className="mt-1 leading-snug">
                     {feria.shuttles ??
@@ -240,7 +247,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                 </section>
                 <section className="rounded-xl border border-festa-red/40 bg-festa-red/5 p-3">
                   <h3 className="display text-base font-extrabold text-festa-red">
-                    Urgences
+                    {t("infos.emergency", lang)}
                   </h3>
                   <ul className="mt-1 space-y-1 font-semibold">
                     <li><a href="tel:112">112, urgences européennes</a></li>
@@ -250,8 +257,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                     <li><a href="tel:3114">3114, souffrance psychique</a></li>
                   </ul>
                   <p className="mt-2 text-xs text-muted">
-                    Postes de secours signalés sur place. Ne laisse jamais
-                    un pote seul en vrac.
+                    {t("emergency.notalone", lang)}
                   </p>
                 </section>
                 <a
@@ -260,7 +266,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   rel="noopener noreferrer"
                   className="block rounded-xl bg-festa-red p-3 text-center font-bold text-white"
                 >
-                  Site officiel de la féria
+                  {t("infos.official", lang)}
                 </a>
               </div>
             )}

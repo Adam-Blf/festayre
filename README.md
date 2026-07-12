@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.8.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.9.0-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -30,6 +30,8 @@ et San Fermin en bonus.
 - [x] Meteo + risque de pluie 6h (Open-Meteo)
 - [x] Infos bracelets d'entree et navettes par feria
 - [x] Numeros d'urgence en un tap
+- [x] Interface FR / ES / EN sur le coeur de survie (onglets, categories,
+      urgences, actions), selecteur persistant
 - [x] Checklist de survie a cocher (persistee en local)
 - [x] Carte QR Instagram a faire scanner
 - [x] PWA installable + mode hors ligne (service worker)
