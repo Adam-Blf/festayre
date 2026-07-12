@@ -22,6 +22,7 @@ import ProgramList from "@/features/program/ProgramList";
 import WeatherCard from "@/features/weather/WeatherCard";
 import { useGeolocation } from "@/features/map/useGeolocation";
 import { useMeetPoint } from "@/features/meetpoint/useMeetPoint";
+import { useGroup } from "@/features/group/useGroup";
 import { t } from "@/features/i18n/translations";
 import { useLang } from "@/features/i18n/useLang";
 import LangSwitcher from "@/features/i18n/LangSwitcher";
@@ -49,6 +50,22 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
   // Point de RDV du groupe (persiste par feria) + retour utilisateur.
   const { point: meetPoint, setMeetPoint, clearMeetPoint, shareMeetPoint } = useMeetPoint(feria.id);
   const [meetMsg, setMeetMsg] = useState<string | null>(null);
+  // Groupe live : les potes apparaissent sur la carte de la feria.
+  const { group, members, refreshMembers, pushPosition } = useGroup();
+
+  useEffect(() => {
+    if (!group) return;
+    refreshMembers();
+    const poll = setInterval(refreshMembers, 15_000);
+    return () => clearInterval(poll);
+  }, [group, refreshMembers]);
+
+  useEffect(() => {
+    if (!group || !position) return;
+    pushPosition(position);
+    const push = setInterval(() => pushPosition(position), 30_000);
+    return () => clearInterval(push);
+  }, [group, position, pushPosition]);
 
   // Chargement des POI une seule fois par feria (donnee stable).
   useEffect(() => {
@@ -169,6 +186,13 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   userPosition={position}
                   pois={sortedPois.filter((p) => p.category === category)}
                   meetPoint={meetPoint}
+                  groupMembers={members
+                    .filter((m) => m.position)
+                    .map((m) => ({
+                      name: m.display_name,
+                      lat: m.position!.lat,
+                      lng: m.position!.lng,
+                    }))}
                 />
                 {/* Barre RDV du groupe, posee sur la carte. */}
                 <div className="absolute inset-x-3 bottom-3 z-10 flex items-center gap-2">

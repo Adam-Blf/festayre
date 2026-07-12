@@ -88,6 +88,15 @@ export default function HomePage() {
       {/* Acces aux outils du festayre. */}
       <nav className="mt-8 grid grid-cols-2 gap-3">
         <Link
+          href="/groupe"
+          className="col-span-2 rounded-xl border border-festa-red/40 bg-card p-4 text-center text-sm font-bold hover:border-festa-red"
+        >
+          Mon groupe (position live)
+          <span className="block text-xs font-normal text-muted">
+            Un code, plus personne ne se perd
+          </span>
+        </Link>
+        <Link
           href="/sam"
           className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
