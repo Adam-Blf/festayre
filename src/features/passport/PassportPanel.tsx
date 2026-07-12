@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FERIAS, feriaStatus } from "@/features/ferias/data";
 import { haversineMeters } from "@/lib/geo";
+import { useCloudSync } from "@/features/sync/cloudSync";
 
 const STAMPS_KEY = "festayre.passport.stamps.v1";
 const CHALLENGES_KEY = "festayre.passport.challenges.v1";
@@ -44,6 +45,8 @@ export default function PassportPanel() {
   const [stamps, setStamps] = useState<Record<string, string>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<string | null>(null);
+  // Sync multi-appareils Festayre+ (last-write-wins).
+  const sync = useCloudSync("passport");
 
   useEffect(() => {
     try {
@@ -53,6 +56,21 @@ export default function PassportPanel() {
       // Stockage corrompu : passeport vierge.
     }
   }, []);
+
+  // Etat distant Festayre+ disponible : il remplace le local (le
+  // dernier appareil qui a ecrit fait foi).
+  useEffect(() => {
+    if (!sync.remote) return;
+    const r = sync.remote as { stamps?: Record<string, string>; challenges?: Record<string, boolean> };
+    if (r.stamps) {
+      setStamps(r.stamps);
+      localStorage.setItem(STAMPS_KEY, JSON.stringify(r.stamps));
+    }
+    if (r.challenges) {
+      setChecked(r.challenges);
+      localStorage.setItem(CHALLENGES_KEY, JSON.stringify(r.challenges));
+    }
+  }, [sync.remote]);
 
   /** Check-in : verifie dates + distance avant de tamponner. */
   const checkIn = (feriaId: string) => {
@@ -77,6 +95,7 @@ export default function PassportPanel() {
         const next = { ...stamps, [feriaId]: new Date().toISOString().slice(0, 10) };
         setStamps(next);
         localStorage.setItem(STAMPS_KEY, JSON.stringify(next));
+        sync.push({ stamps: next, challenges: checked });
         setStatus(`Tampon ${feria.name} validé. Bonne fête.`);
       },
       () => setStatus("GPS requis pour tamponner (préviens pas le canapé).")
@@ -87,12 +106,18 @@ export default function PassportPanel() {
     const next = { ...checked, [label]: !checked[label] };
     setChecked(next);
     localStorage.setItem(CHALLENGES_KEY, JSON.stringify(next));
+    sync.push({ stamps, challenges: next });
   };
 
   const stampCount = Object.keys(stamps).length;
 
   return (
     <div className="space-y-5">
+      {sync.active && (
+        <p className="text-center text-[11px] font-semibold text-festa-green">
+          Synchronisé entre tes appareils (Festayre+)
+        </p>
+      )}
       {status && (
         <p role="status" className="rounded-lg bg-festa-navy/5 p-3 text-center text-xs">
           {status}
