@@ -2,6 +2,12 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.13.1] - 2026-07-12
+
+- Smoke test HTTP de la prod (scripts/smoke_prod.mjs) : 25 checks,
+  15 routes avec marqueur de contenu, headers securite, manifeste,
+  service worker, icones, 404 maison. Execute ce jour : 25/25 verts.
+
 ## [0.13.0] - 2026-07-12
 
 - Position live du groupe (0010_groups.sql) : groupe ephemere a code

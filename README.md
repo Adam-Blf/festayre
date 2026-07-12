@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.13.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.13.1-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -78,6 +78,7 @@ npm test           # tests unitaires (geo + parsing Overpass)
 node scripts/e2e_community.mjs  # E2E communaute sur le vrai Supabase (.env.local requis)
 node scripts/e2e_sync.mjs       # E2E sync Festayre+ multi-appareils
 node scripts/e2e_group.mjs      # E2E groupe live (positions, RLS non-membres)
+node scripts/smoke_prod.mjs     # smoke HTTP de la prod (routes, headers, PWA)
 npm run build      # build de production
 ```
 
