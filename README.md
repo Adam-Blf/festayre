@@ -8,7 +8,7 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.11.0-15274b?style=flat-square)
+![version](https://img.shields.io/badge/version-0.12.0-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
@@ -43,7 +43,8 @@ et San Fermin en bonus.
       revele au match uniquement (RLS), messagerie interne reservee aux
       matchs (policy d'insertion verifiee cote base), statut lu/non-lu
       et compteur de non-lus (contenu des messages fige par trigger), fil de bons plans,
-      covoiturage, signalement avec auto-masquage (3 signaleurs distincts)
+      covoiturage avec contact, objets perdus / trouves par feria,
+      signalement avec auto-masquage (3 signaleurs distincts)
 - [x] Comptes email + mot de passe (Supabase) et pack Festayre+ (Stripe) :
       passeport et checklist synchronises entre appareils (gating d'achat
       verifie en base par la RLS)

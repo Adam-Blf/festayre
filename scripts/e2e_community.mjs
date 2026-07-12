@@ -147,6 +147,20 @@ async function main() {
     check("profil masque absent du browse", !(browse ?? []).some((r) => r.user_id === idB));
     for (const id of extras) await admin.auth.admin.deleteUser(id);
 
+    // Objets perdus / trouves : lecture partagee, ecriture proprietaire.
+    const { error: lfIns } = await clientA.from("lost_found").insert({
+      feria_id: "bayonne", user_id: idA, kind: "perdu",
+      item: "sac banane e2e", place: "place Paul-Bert",
+    });
+    check("annonce objet perdu creee", !lfIns, lfIns?.message);
+    const { data: lfSeen } = await clientB
+      .from("lost_found").select("id, item").eq("feria_id", "bayonne");
+    const lfRow = (lfSeen ?? []).find((o) => o.item === "sac banane e2e");
+    check("annonce visible par un autre connecte", Boolean(lfRow));
+    const { data: lfDel } = await clientB
+      .from("lost_found").delete().eq("id", lfRow.id).select();
+    check("suppression par un tiers refusee (0 ligne)", (lfDel ?? []).length === 0);
+
     // Bonus : un profil mineur doit etre refuse par la contrainte SQL.
     const { error: minor } = await clientA.from("community_profiles")
       .update({ birthdate: "2015-01-01" }).eq("user_id", idA);
