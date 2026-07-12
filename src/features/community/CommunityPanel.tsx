@@ -84,6 +84,9 @@ export default function CommunityPanel() {
   const [unreadBySender, setUnreadBySender] = useState<Record<string, number>>({});
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatText, setChatText] = useState("");
+  // Signalement en cours : cible + raison choisie.
+  const [reporting, setReporting] = useState<{ type: "profile" | "post"; id: string } | null>(null);
+  const [reportReason, setReportReason] = useState("");
   const [rides, setRides] = useState<Ride[]>([]);
   const [names, setNames] = useState<Record<string, string>>({});
 
@@ -135,6 +138,7 @@ export default function CommunityPanel() {
         .from("community_profiles")
         .select("user_id, display_name, bio, is_adult, first_name, city, birthdate, gender, looking_for, photo_path")
         .eq("is_adult", true)
+        .eq("hidden", false)
         .neq("user_id", user.id)
         .limit(100);
       const others = (rows ?? []) as Profile[];
@@ -368,6 +372,25 @@ export default function CommunityPanel() {
     await supabase.from("community_profiles").delete().eq("user_id", user.id);
     setMyProfile(null);
     setStatus("Profil supprimé, données effacées.");
+  };
+
+  /** Envoie un signalement (1 max par cible, contrainte unique). */
+  const submitReport = async () => {
+    if (!supabase || !user || !reporting || !reportReason) return;
+    const { error } = await supabase.from("reports").insert({
+      reporter_id: user.id,
+      target_type: reporting.type,
+      target_id: reporting.id,
+      reason: reportReason,
+    });
+    setStatus(
+      error
+        ? "Déjà signalé (un signalement par personne et par cible)."
+        : "Signalement envoyé, merci. 3 signalements distincts masquent un profil."
+    );
+    setReporting(null);
+    setReportReason("");
+    refresh();
   };
 
   const like = async (likedId: string) => {
@@ -608,6 +631,41 @@ export default function CommunityPanel() {
         </p>
       )}
 
+      {/* Mini-formulaire de signalement. */}
+      {reporting && (
+        <div className="rounded-xl border border-festa-red/40 bg-festa-red/5 p-3">
+          <p className="text-sm font-bold">Signaler ce {reporting.type === "profile" ? "profil" : "message"}</p>
+          <select
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            aria-label="Raison du signalement"
+            className="mt-2 min-h-11 w-full rounded-lg border border-card-border bg-card px-2 text-sm"
+          >
+            <option value="">Choisir une raison</option>
+            <option value="photo inappropriee">Photo inappropriée</option>
+            <option value="faux profil">Faux profil</option>
+            <option value="harcelement">Harcèlement</option>
+            <option value="personne mineure">Personne mineure</option>
+            <option value="autre">Autre</option>
+          </select>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={submitReport}
+              disabled={!reportReason}
+              className="min-h-11 flex-1 rounded-lg bg-festa-red text-xs font-bold text-white disabled:opacity-50"
+            >
+              Envoyer le signalement
+            </button>
+            <button
+              onClick={() => setReporting(null)}
+              className="min-h-11 flex-1 rounded-lg border border-card-border text-xs font-bold"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ---- Conversation ouverte (remplace l'onglet) ---- */}
       {chatWith && (
         <div className="space-y-3">
@@ -729,6 +787,13 @@ export default function CommunityPanel() {
                   {p.bio && <p className="truncate text-xs text-muted">{p.bio}</p>}
                 </div>
                 <button
+                  onClick={() => setReporting({ type: "profile", id: p.user_id })}
+                  aria-label={`Signaler ${p.display_name}`}
+                  className="flex h-11 w-8 shrink-0 items-center justify-center text-xs font-bold text-muted"
+                >
+                  !
+                </button>
+                <button
                   onClick={() => like(p.user_id)}
                   disabled={myLikes.has(p.user_id)}
                   className={`flex min-h-11 items-center rounded-full px-4 text-xs font-bold ${
@@ -775,11 +840,20 @@ export default function CommunityPanel() {
           </div>
           <ul className="space-y-2">
             {posts.map((p) => (
-              <li key={p.id} className="rounded-xl border border-card-border bg-card p-3">
-                <p className="text-xs font-bold text-festa-red">
-                  {names[p.user_id] ?? "Festayre"}
-                </p>
-                <p className="mt-0.5 text-sm">{p.content}</p>
+              <li key={p.id} className="flex items-start gap-2 rounded-xl border border-card-border bg-card p-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold text-festa-red">
+                    {names[p.user_id] ?? "Festayre"}
+                  </p>
+                  <p className="mt-0.5 text-sm">{p.content}</p>
+                </div>
+                <button
+                  onClick={() => setReporting({ type: "post", id: p.id })}
+                  aria-label="Signaler ce message"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center text-xs font-bold text-muted"
+                >
+                  !
+                </button>
               </li>
             ))}
             {posts.length === 0 && (

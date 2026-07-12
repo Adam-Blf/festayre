@@ -116,6 +116,37 @@ async function main() {
       .update({ content: "contenu falsifie" }).eq("id", inbox[0].id);
     check("falsification du contenu bloquee par le trigger", Boolean(tamper));
 
+    // Signalements : anti-doublon puis auto-masquage a 3 distincts.
+    const { error: r1 } = await clientA.from("reports").insert({
+      reporter_id: idA, target_type: "profile", target_id: idB, reason: "faux profil",
+    });
+    check("signalement accepte", !r1, r1?.message);
+    const { error: rDup } = await clientA.from("reports").insert({
+      reporter_id: idA, target_type: "profile", target_id: idB, reason: "faux profil",
+    });
+    check("doublon de signalement refuse", Boolean(rDup));
+
+    // Deux signaleurs supplementaires -> le profil B doit se masquer.
+    const extras = [];
+    for (const n of [1, 2]) {
+      const cli = createClient(URL_, ANON, { auth: { persistSession: false } });
+      const { data: u } = await cli.auth.signUp({
+        email: `e2e-r${n}-${stamp}@festayre-e2e.beloucif.com`,
+        password: `E2e!${stamp}r${n}`,
+      });
+      extras.push(u.user.id);
+      await cli.from("reports").insert({
+        reporter_id: u.user.id, target_type: "profile", target_id: idB, reason: "harcelement",
+      });
+    }
+    const { data: bProfile } = await admin
+      .from("community_profiles").select("hidden").eq("user_id", idB).single();
+    check("profil masque apres 3 signaleurs distincts", bProfile?.hidden === true);
+    const { data: browse } = await clientA
+      .from("community_profiles").select("user_id").eq("hidden", false).neq("user_id", idA);
+    check("profil masque absent du browse", !(browse ?? []).some((r) => r.user_id === idB));
+    for (const id of extras) await admin.auth.admin.deleteUser(id);
+
     // Bonus : un profil mineur doit etre refuse par la contrainte SQL.
     const { error: minor } = await clientA.from("community_profiles")
       .update({ birthdate: "2015-01-01" }).eq("user_id", idA);

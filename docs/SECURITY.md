@@ -40,9 +40,9 @@ Chaque ligne est VERIFIEE, pas déclarative.
 - **Protection mots de passe compromis (HaveIBeenPwned)** : reserve
   au plan Pro Supabase, non activable sur le plan free. Mitigation :
   longueur minimale 8 imposee cote Supabase.
-- **Pas de moderation photo automatique** : v1. Prevoir un bouton de
-  signalement + revue manuelle, ou un scan automatise si le volume
-  monte.
+- **Moderation** : signalement en place avec auto-masquage a 3
+  signaleurs distincts (trigger 0008). Reste sans scan automatique du
+  contenu des photos : a ajouter si le volume monte.
 
 ## Process de mise en prod (reproductible)
 
