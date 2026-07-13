@@ -2,6 +2,12 @@
 
 Format : [semver] - date - resume. Le detail vit dans l'historique git.
 
+## [0.13.2] - 2026-07-13
+
+- CI GitHub Actions : tests unitaires + build sur chaque PR et sur
+  main (badge README). Les E2E restent des verifications locales
+  pre-release (secrets Supabase requis).
+
 ## [0.13.1] - 2026-07-12
 
 - Smoke test HTTP de la prod (scripts/smoke_prod.mjs) : 25 checks,

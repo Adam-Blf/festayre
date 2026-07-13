@@ -8,7 +8,8 @@
 [![license](https://img.shields.io/github/license/Adam-Blf/festayre?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
 
-![version](https://img.shields.io/badge/version-0.13.1-15274b?style=flat-square)
+![ci](https://github.com/Adam-Blf/festayre/actions/workflows/ci.yml/badge.svg)
+![version](https://img.shields.io/badge/version-0.13.2-15274b?style=flat-square)
 ![brand](https://img.shields.io/badge/brand-navy%20%2315274b%20rouge%20%23b80c1d-15274b?style=flat-square)
 ![stack](https://img.shields.io/badge/Next.js%2016-TypeScript-black?style=flat-square)
 ![pwa](https://img.shields.io/badge/PWA-installable-C8102E?style=flat-square)
