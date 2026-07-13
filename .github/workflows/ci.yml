@@ -1,0 +1,24 @@
+# CI Festayre : tests unitaires + build sur chaque PR et sur main.
+#
+# Les suites E2E (scripts/e2e_*.mjs) ne tournent PAS ici : elles
+# frappent le vrai projet Supabase avec des secrets, elles restent
+# des verifications locales pre-release (voir README).
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
