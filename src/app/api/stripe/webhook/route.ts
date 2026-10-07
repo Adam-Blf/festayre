@@ -18,10 +18,10 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: Request) {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const secretKey = process.env.FESTAYRE_STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.FESTAYRE_STRIPE_WEBHOOK_SECRET;
+  const supabaseUrl = process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL;
+  const serviceRoleKey = process.env.FESTAYRE_SUPABASE_SERVICE_ROLE_KEY;
   if (!secretKey || !webhookSecret || !supabaseUrl || !serviceRoleKey) {
     return NextResponse.json({ error: "Webhook non configuré." }, { status: 503 });
   }

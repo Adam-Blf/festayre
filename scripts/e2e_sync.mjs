@@ -12,14 +12,10 @@
  * Usage : node scripts/e2e_sync.mjs
  */
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync } from "node:fs";
+import { env } from "./load-env.mjs";
 
-const env = Object.fromEntries(
-  readFileSync(".env.local", "utf8")
-    .split("\n")
-    .filter((l) => l.includes("="))
-    .map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1).trim()])
-);
+// EN: .env.local then the central secrets file, see load-env.mjs.
+// FR : .env.local puis le fichier de secrets central, voir load-env.mjs.
 
 let failures = 0;
 const check = (label, ok, detail = "") => {
@@ -30,9 +26,9 @@ const check = (label, ok, detail = "") => {
 const stamp = Date.now();
 const CREDS = { email: `e2e-sync-${stamp}@festayre-e2e.beloucif.com`, password: `E2e!${stamp}s` };
 
-const phone1 = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
-const phone2 = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
-const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+const phone1 = createClient(env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL, env.NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+const phone2 = createClient(env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL, env.NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+const admin = createClient(env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL, env.FESTAYRE_SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 
 async function main() {
   const { data: a, error } = await phone1.auth.signUp(CREDS);

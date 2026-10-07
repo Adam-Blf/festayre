@@ -12,8 +12,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 /** Client lie a la session du visiteur (droits limites par RLS). */
 export async function getSupabaseServer(): Promise<SupabaseClient | null> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY;
   if (!url || !anonKey) return null;
 
   const cookieStore = await cookies();
