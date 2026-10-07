@@ -75,7 +75,7 @@ Open-Meteo, tuiles OSM.
 npm install
 npm run dev        # http://localhost:3000
 npm test           # tests unitaires (geo + parsing Overpass)
-node scripts/e2e_community.mjs  # E2E communaute sur le vrai Supabase (.env.local requis)
+node scripts/e2e_community.mjs  # E2E communaute sur le vrai Supabase (.env.local ou fichier central)
 node scripts/e2e_sync.mjs       # E2E sync Festayre+ multi-appareils
 node scripts/e2e_group.mjs      # E2E groupe live (positions, RLS non-membres)
 node scripts/smoke_prod.mjs     # smoke HTTP de la prod (routes, headers, PWA)
@@ -92,6 +92,17 @@ observabilite, copier `.env.example` vers `.env.local` et remplir :
 | Stripe | https://dashboard.stripe.com/apikeys et /webhooks |
 | PostHog | https://eu.posthog.com, Settings, Project API key |
 | Sentry | https://sentry.io, Settings, Projects, Client Keys (DSN) |
+
+Les cles qui existent dans plusieurs projets portent le prefixe `FESTAYRE`
+pour rester uniques : `NEXT_PUBLIC_FESTAYRE_SUPABASE_URL`,
+`NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY`, `FESTAYRE_SUPABASE_SERVICE_ROLE_KEY`,
+`FESTAYRE_STRIPE_SECRET_KEY`, `FESTAYRE_STRIPE_WEBHOOK_SECRET`.
+
+En local, `next.config.ts` et les scripts e2e (`scripts/load-env.mjs`)
+chargent aussi le fichier de secrets central `~/.secrets/projets.env` s'il
+existe (chemin modifiable par `CENTRAL_ENV_FILE`). Une variable deja definie,
+ou presente dans `.env.local`, n'est jamais ecrasee. Le fichier n'existe pas
+sur Vercel.
 
 Puis appliquer les migrations SQL : `supabase/migrations/0001_init.sql`
 `0002` a `0005` (SQL Editor Supabase, ou

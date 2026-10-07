@@ -13,14 +13,10 @@
  * Usage : node scripts/e2e_group.mjs
  */
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync } from "node:fs";
+import { env } from "./load-env.mjs";
 
-const env = Object.fromEntries(
-  readFileSync(".env.local", "utf8")
-    .split("\n")
-    .filter((l) => l.includes("="))
-    .map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1).trim()])
-);
+// EN: .env.local then the central secrets file, see load-env.mjs.
+// FR : .env.local puis le fichier de secrets central, voir load-env.mjs.
 
 let failures = 0;
 const check = (label, ok, detail = "") => {
@@ -30,10 +26,10 @@ const check = (label, ok, detail = "") => {
 
 const stamp = Date.now();
 const mk = (n) =>
-  createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+  createClient(env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL, env.NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY, {
     auth: { persistSession: false },
   });
-const admin = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+const admin = createClient(env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL, env.FESTAYRE_SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 

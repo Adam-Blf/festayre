@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- chore(env): prefix shared keys with `FESTAYRE` so every key is unique across projects (`NEXT_PUBLIC_FESTAYRE_SUPABASE_URL`, `NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY`, `FESTAYRE_SUPABASE_SERVICE_ROLE_KEY`, `FESTAYRE_STRIPE_SECRET_KEY`, `FESTAYRE_STRIPE_WEBHOOK_SECRET`), and load the central secrets file `~/.secrets/projets.env` (or `CENTRAL_ENV_FILE`) in local dev from `next.config.ts` and the e2e scripts (`scripts/load-env.mjs`).
+
 ## [0.13.1] - 2026-10-07
 
 First tagged release. Latest changes:

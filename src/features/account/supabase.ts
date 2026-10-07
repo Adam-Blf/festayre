@@ -15,7 +15,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 /** true si le projet Supabase est configure (mode compte actif). */
 export function isSupabaseConfigured(): boolean {
   return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL && process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY
   );
 }
 
@@ -31,8 +31,8 @@ export function getSupabaseBrowser(): SupabaseClient | null {
   if (!isSupabaseConfigured()) return null;
   if (!browserClient) {
     browserClient = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY!
     );
   }
   return browserClient;

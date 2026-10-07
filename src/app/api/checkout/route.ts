@@ -17,7 +17,7 @@ import Stripe from "stripe";
 import { getSupabaseServer } from "@/features/account/supabase-server";
 
 export async function POST(req: Request) {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const secretKey = process.env.FESTAYRE_STRIPE_SECRET_KEY;
   const priceId = process.env.STRIPE_PRICE_FESTAYRE_PLUS;
   if (!secretKey || !priceId) {
     return NextResponse.json(
