@@ -4,8 +4,11 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-09
+
 ### Changed
 
+- Buttons say what the visitor gets (onboarding, account, community entry), see `docs/boutons.md`. Fill text and button borders now meet 4.5:1 and 3:1 in light and dark themes (new `on-fill` and `edge` tokens).
 - chore(env): prefix shared keys with `FESTAYRE` so every key is unique across projects (`NEXT_PUBLIC_FESTAYRE_SUPABASE_URL`, `NEXT_PUBLIC_FESTAYRE_SUPABASE_ANON_KEY`, `FESTAYRE_SUPABASE_SERVICE_ROLE_KEY`, `FESTAYRE_STRIPE_SECRET_KEY`, `FESTAYRE_STRIPE_WEBHOOK_SECRET`), and load the central secrets file `~/.secrets/projets.env` (or `CENTRAL_ENV_FILE`) in local dev from `next.config.ts` and the e2e scripts (`scripts/load-env.mjs`).
 
 ## [0.13.1] - 2026-10-07

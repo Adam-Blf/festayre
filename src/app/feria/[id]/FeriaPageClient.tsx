@@ -99,7 +99,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
             <h1 className="display truncate text-xl font-extrabold">
               {feria.name}
               {status === "live" && (
-                <span className="live-pulse ml-2 inline-block rounded-full bg-festa-red px-2 py-0.5 align-middle text-[10px] font-bold uppercase text-white">
+                <span className="live-pulse ml-2 inline-block rounded-full bg-festa-red px-2 py-0.5 align-middle text-[10px] font-bold uppercase text-on-fill">
                   Live
                 </span>
               )}
@@ -152,8 +152,8 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
               onClick={() => setCategory(tab.id)}
               className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-bold ${
                 category === tab.id
-                  ? "bg-festa-red text-white"
-                  : "border border-card-border bg-card text-muted"
+                  ? "bg-festa-red text-on-fill"
+                  : "border border-edge bg-card text-muted"
               }`}
             >
               {t(tab.labelKey, lang)}
@@ -202,7 +202,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                       setMeetPoint(position ?? feria.center);
                       setMeetMsg("RDV épinglé sur la carte.");
                     }}
-                    className="flex min-h-11 flex-1 items-center justify-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white shadow-lg"
+                    className="flex min-h-11 flex-1 items-center justify-center rounded-full bg-festa-navy px-4 text-xs font-bold text-on-fill shadow-lg"
                   >
                     {meetPoint ? t("meet.move", lang) : t("meet.set", lang)}
                   </button>
@@ -210,7 +210,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                     <>
                       <button
                         onClick={async () => setMeetMsg(await shareMeetPoint())}
-                        className="flex min-h-11 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white shadow-lg"
+                        className="flex min-h-11 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-on-fill shadow-lg"
                       >
                         {t("action.share", lang)}
                       </button>
@@ -288,7 +288,7 @@ export default function FeriaPageClient({ feria }: { feria: Feria }) {
                   href={feria.official}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block rounded-xl bg-festa-red p-3 text-center font-bold text-white"
+                  className="block rounded-xl bg-festa-red p-3 text-center font-bold text-on-fill"
                 >
                   {t("infos.official", lang)}
                 </a>

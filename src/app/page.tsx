@@ -89,7 +89,7 @@ export default function HomePage() {
       <nav className="mt-8 grid grid-cols-2 gap-3">
         <Link
           href="/groupe"
-          className="col-span-2 rounded-xl border border-festa-red/40 bg-card p-4 text-center text-sm font-bold hover:border-festa-red"
+          className="col-span-2 rounded-xl border border-festa-red bg-card p-4 text-center text-sm font-bold hover:border-festa-red"
         >
           Mon groupe (position live)
           <span className="block text-xs font-normal text-muted">
@@ -98,7 +98,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/sam"
-          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-edge bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Mode SAM
           <span className="block text-xs font-normal text-muted">
@@ -107,7 +107,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/passeport"
-          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-edge bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Passeport
           <span className="block text-xs font-normal text-muted">
@@ -116,7 +116,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/communaute"
-          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-edge bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Communauté
           <span className="block text-xs font-normal text-muted">
@@ -125,7 +125,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/checklist"
-          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-edge bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Checklist
           <span className="block text-xs font-normal text-muted">
@@ -134,7 +134,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/compte"
-          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-edge bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Mon compte
           <span className="block text-xs font-normal text-muted">
@@ -143,7 +143,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/carte"
-          className="rounded-xl border border-card-border bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
+          className="rounded-xl border border-edge bg-card p-4 text-center text-sm font-bold hover:border-festa-red/50"
         >
           Ma carte QR
           <span className="block text-xs font-normal text-muted">

@@ -26,10 +26,10 @@ export default function CartePage() {
         initial={{ opacity: 0, rotate: -2, y: 20 }}
         animate={{ opacity: 1, rotate: 0, y: 0 }}
         transition={{ type: "spring", stiffness: 120, damping: 14 }}
-        className="mx-auto w-full max-w-sm rounded-3xl bg-festa-red p-6 text-white shadow-2xl"
+        className="mx-auto w-full max-w-sm rounded-3xl bg-festa-red p-6 text-on-fill shadow-2xl"
       >
         <p className="display text-2xl font-extrabold">Adam</p>
-        <p className="text-sm text-white/80">@_adam_blf</p>
+        <p className="text-sm text-on-fill/90">@_adam_blf</p>
 
         <div className="mt-4 rounded-2xl bg-white p-4">
           {/* QR genere en SVG local : fonctionne meme hors ligne. */}

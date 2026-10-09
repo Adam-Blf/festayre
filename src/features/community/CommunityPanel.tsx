@@ -508,9 +508,9 @@ export default function CommunityPanel() {
         <p>La communauté demande un compte (anti-spam, anti-troll).</p>
         <Link
           href="/compte"
-          className="mt-3 block rounded-lg bg-festa-red py-2.5 text-center font-bold text-white"
+          className="mt-3 block rounded-lg bg-festa-red py-2.5 text-center font-bold text-on-fill"
         >
-          Se connecter en 30 secondes
+          Rejoindre la communauté
         </Link>
       </div>
     );
@@ -616,7 +616,7 @@ export default function CommunityPanel() {
           <button
             onClick={saveProfile}
             disabled={formName.trim().length < 2 || !formAdult}
-            className="w-full rounded-lg bg-festa-red py-2.5 text-sm font-bold text-white disabled:opacity-50"
+            className="w-full rounded-lg bg-festa-red py-2.5 text-sm font-bold text-on-fill disabled:opacity-50"
           >
             Créer mon profil
           </button>
@@ -665,12 +665,12 @@ export default function CommunityPanel() {
               key={id}
               onClick={() => setTab(id)}
               className={`relative min-h-11 flex-1 rounded-lg ${
-                tab === id ? "bg-festa-red text-white" : "text-muted"
+                tab === id ? "bg-festa-red text-on-fill" : "text-muted"
               }`}
             >
               {label}
               {id === "rencontres" && totalUnread > 0 && (
-                <span className="absolute right-2 top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-festa-red px-1 text-[10px] font-bold text-white ring-2 ring-card">
+                <span className="absolute right-2 top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-festa-red px-1 text-[10px] font-bold text-on-fill ring-2 ring-card">
                   {totalUnread}
                 </span>
               )}
@@ -706,13 +706,13 @@ export default function CommunityPanel() {
             <button
               onClick={submitReport}
               disabled={!reportReason}
-              className="min-h-11 flex-1 rounded-lg bg-festa-red text-xs font-bold text-white disabled:opacity-50"
+              className="min-h-11 flex-1 rounded-lg bg-festa-red text-xs font-bold text-on-fill disabled:opacity-50"
             >
               Envoyer le signalement
             </button>
             <button
               onClick={() => setReporting(null)}
-              className="min-h-11 flex-1 rounded-lg border border-card-border text-xs font-bold"
+              className="min-h-11 flex-1 rounded-lg border border-edge text-xs font-bold"
             >
               Annuler
             </button>
@@ -740,7 +740,7 @@ export default function CommunityPanel() {
                 key={m.id}
                 className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${
                   m.sender_id === user.id
-                    ? "ml-auto bg-festa-red text-white"
+                    ? "ml-auto bg-festa-red text-on-fill"
                     : "bg-background"
                 }`}
               >
@@ -765,7 +765,7 @@ export default function CommunityPanel() {
             />
             <button
               onClick={sendMessage}
-              className="min-h-11 rounded-lg bg-festa-red px-4 text-sm font-bold text-white"
+              className="min-h-11 rounded-lg bg-festa-red px-4 text-sm font-bold text-on-fill"
             >
               Envoyer
             </button>
@@ -789,11 +789,11 @@ export default function CommunityPanel() {
                       onClick={() =>
                         setChatWith({ id: profile.user_id, name: profile.display_name })
                       }
-                      className="relative flex min-h-11 items-center rounded-full bg-festa-navy px-4 text-xs font-bold text-white"
+                      className="relative flex min-h-11 items-center rounded-full bg-festa-navy px-4 text-xs font-bold text-on-fill"
                     >
                       Messages
                       {(unreadBySender[profile.user_id] ?? 0) > 0 && (
-                        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-festa-red px-1 text-[10px] font-bold text-white">
+                        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-festa-red px-1 text-[10px] font-bold text-on-fill">
                           {unreadBySender[profile.user_id]}
                         </span>
                       )}
@@ -802,7 +802,7 @@ export default function CommunityPanel() {
                       href={`https://instagram.com/${instagram}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex min-h-11 items-center rounded-full bg-festa-green px-4 text-xs font-bold text-white"
+                      className="flex min-h-11 items-center rounded-full bg-festa-green px-4 text-xs font-bold text-on-fill"
                     >
                       @{instagram}
                     </a>
@@ -853,7 +853,7 @@ export default function CommunityPanel() {
                   className={`flex min-h-11 items-center rounded-full px-4 text-xs font-bold ${
                     myLikes.has(p.user_id)
                       ? "bg-card-border text-muted"
-                      : "bg-festa-red text-white"
+                      : "bg-festa-red text-on-fill"
                   }`}
                 >
                   {myLikes.has(p.user_id) ? "Liké" : "Like"}
@@ -887,7 +887,7 @@ export default function CommunityPanel() {
             />
             <button
               onClick={publishPost}
-              className="rounded-lg bg-festa-red px-4 text-sm font-bold text-white"
+              className="rounded-lg bg-festa-red px-4 text-sm font-bold text-on-fill"
             >
               Publier
             </button>
@@ -961,7 +961,7 @@ export default function CommunityPanel() {
             />
             <button
               onClick={publishRide}
-              className="mt-2 w-full rounded-lg bg-festa-navy py-2.5 text-sm font-bold text-white"
+              className="mt-2 w-full rounded-lg bg-festa-navy py-2.5 text-sm font-bold text-on-fill"
             >
               Proposer le trajet
             </button>
@@ -1046,7 +1046,7 @@ export default function CommunityPanel() {
             <button
               onClick={publishLostFound}
               disabled={lfItem.trim().length < 3}
-              className="mt-2 w-full rounded-lg bg-festa-navy py-2.5 text-sm font-bold text-white disabled:opacity-50"
+              className="mt-2 w-full rounded-lg bg-festa-navy py-2.5 text-sm font-bold text-on-fill disabled:opacity-50"
             >
               Publier l&apos;annonce
             </button>
@@ -1077,7 +1077,7 @@ export default function CommunityPanel() {
                 {o.user_id === user.id && !o.resolved && (
                   <button
                     onClick={() => resolveLostFound(o.id)}
-                    className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-green px-3 text-xs font-bold text-white"
+                    className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-green px-3 text-xs font-bold text-on-fill"
                   >
                     Résolu
                   </button>

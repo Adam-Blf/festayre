@@ -169,7 +169,7 @@ export default function PassportPanel() {
                   <button
                     onClick={() => checkIn(feria.id)}
                     disabled={!live}
-                    className={`w-full rounded-lg border border-dashed border-card-border py-2 text-xs font-semibold ${
+                    className={`w-full rounded-lg border border-dashed border-edge py-2 text-xs font-semibold ${
                       live ? "text-festa-navy" : "text-muted opacity-50"
                     }`}
                   >

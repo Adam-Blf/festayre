@@ -50,13 +50,13 @@ export default function SettingsPanel() {
         <div className="mt-3 flex gap-2">
           <button
             onClick={wipeLocal}
-            className="min-h-11 flex-1 rounded-lg bg-festa-red text-xs font-bold text-white"
+            className="min-h-11 flex-1 rounded-lg bg-festa-red text-xs font-bold text-on-fill"
           >
             Confirmer l&apos;effacement
           </button>
           <button
             onClick={() => setConfirm(false)}
-            className="min-h-11 flex-1 rounded-lg border border-card-border text-xs font-bold"
+            className="min-h-11 flex-1 rounded-lg border border-edge text-xs font-bold"
           >
             Annuler
           </button>

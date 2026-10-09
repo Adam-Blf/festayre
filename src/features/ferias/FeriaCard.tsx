@@ -43,13 +43,13 @@ export default function FeriaCard({ feria, index }: Props) {
         className={`relative flex overflow-hidden rounded-xl border bg-card transition-colors ${
           status === "live"
             ? "border-festa-red shadow-lg shadow-festa-red/15"
-            : "border-card-border hover:border-festa-red/50"
+            : "border-edge hover:border-festa-red/50"
         } ${status === "past" ? "opacity-55" : ""}`}
       >
         {/* Souche du billet : les dates en gros. */}
         <div
           className={`flex w-20 shrink-0 flex-col items-center justify-center py-4 ${
-            status === "live" ? "bg-festa-red text-white" : "bg-festa-navy/5 text-festa-navy"
+            status === "live" ? "bg-festa-red text-on-fill" : "bg-festa-navy/5 text-festa-navy"
           }`}
         >
           <span className="display text-2xl tabular-nums">{stubDays}</span>

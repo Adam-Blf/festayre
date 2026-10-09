@@ -15,6 +15,8 @@
   --festa-navy: #15274b;   /* navy du pin de localisation */
   --festa-green: #007a53;  /* clin d'oeil vert basque */
   --muted: #64718c;
+  --edge: #7a869f;
+  --on-fill: #ffffff;
 }
 
 @theme inline {
@@ -26,6 +28,8 @@
   --color-festa-navy: var(--festa-navy);
   --color-festa-green: var(--festa-green);
   --color-muted: var(--muted);
+  --color-edge: var(--edge);
+  --color-on-fill: var(--on-fill);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
 }
@@ -41,6 +45,8 @@
     --festa-navy: #9db1dd;
     --festa-green: #2fbd8f;
     --muted: #94a1c0;
+    --edge: #5f709b;
+    --on-fill: #0d1526;
   }
 }
 

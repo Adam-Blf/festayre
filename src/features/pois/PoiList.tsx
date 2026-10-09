@@ -79,7 +79,7 @@ export default function PoiList({ pois, category }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${t("action.directions", lang)} : ${poi.name}`}
-            className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white"
+            className="flex min-h-11 shrink-0 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-on-fill"
           >
             {t("action.go", lang)}
           </a>

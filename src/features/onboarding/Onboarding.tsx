@@ -5,7 +5,7 @@
  *
  * Standard App Store : 3 ecrans max, un geste par ecran, la creation
  * de compte proposee (magic link, zero mot de passe) mais JAMAIS
- * imposee, "Continuer sans compte" est toujours visible. Le flag
+ * imposee, "Ouvrir l’appli sans compte" est toujours visible. Le flag
  * localStorage evite de le remontrer.
  */
 import { useState } from "react";
@@ -128,9 +128,9 @@ export default function Onboarding() {
                   <button
                     onClick={signUp}
                     disabled={busy || !email.includes("@") || password.length < 8}
-                    className="min-h-12 w-full rounded-xl bg-festa-red text-sm font-bold text-white disabled:opacity-50"
+                    className="min-h-12 w-full rounded-xl bg-festa-red text-sm font-bold text-on-fill disabled:opacity-50"
                   >
-                    {busy ? "Création..." : "Créer mon compte"}
+                    {busy ? "Création..." : "Débloquer la communauté"}
                   </button>
                   {error && <p className="text-xs text-festa-red">{error}</p>}
                 </div>
@@ -163,9 +163,9 @@ export default function Onboarding() {
         {step < lastStep && (
           <button
             onClick={() => setStep(step + 1)}
-            className="min-h-12 w-full rounded-xl bg-festa-red text-sm font-bold text-white"
+            className="min-h-12 w-full rounded-xl bg-festa-red text-sm font-bold text-on-fill"
           >
-            Continuer
+            {step === 0 ? "Découvrir les astuces de nuit" : "Découvrir la communauté"}
           </button>
         )}
 
