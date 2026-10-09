@@ -118,13 +118,13 @@ export default function AccountPanel() {
         <div className="flex rounded-lg border border-card-border text-sm font-bold">
           <button
             onClick={() => setSignupMode(false)}
-            className={`min-h-11 flex-1 rounded-lg ${!signupMode ? "bg-festa-red text-white" : "text-muted"}`}
+            className={`min-h-11 flex-1 rounded-lg ${!signupMode ? "bg-festa-red text-on-fill" : "text-muted"}`}
           >
             Connexion
           </button>
           <button
             onClick={() => setSignupMode(true)}
-            className={`min-h-11 flex-1 rounded-lg ${signupMode ? "bg-festa-red text-white" : "text-muted"}`}
+            className={`min-h-11 flex-1 rounded-lg ${signupMode ? "bg-festa-red text-on-fill" : "text-muted"}`}
           >
             Inscription
           </button>
@@ -150,9 +150,9 @@ export default function AccountPanel() {
         <button
           onClick={submitAuth}
           disabled={busy || !email.includes("@") || password.length < 8}
-          className="mt-2 w-full rounded-lg bg-festa-red py-3 text-sm font-bold text-white disabled:opacity-50"
+          className="mt-2 w-full rounded-lg bg-festa-red py-3 text-sm font-bold text-on-fill disabled:opacity-50"
         >
-          {busy ? "..." : signupMode ? "Créer mon compte" : "Me connecter"}
+          {busy ? "..." : signupMode ? "Débloquer la communauté" : "Retrouver ma communauté"}
         </button>
         {!signupMode && (
           <button onClick={resetPassword} className="mt-2 w-full text-xs text-muted underline">
@@ -201,9 +201,9 @@ export default function AccountPanel() {
             <button
               onClick={buyPlus}
               disabled={busy}
-              className="mt-3 w-full rounded-lg bg-festa-red py-2.5 text-sm font-bold text-white disabled:opacity-50"
+              className="mt-3 w-full rounded-lg bg-festa-red py-2.5 text-sm font-bold text-on-fill disabled:opacity-50"
             >
-              {busy ? "Redirection..." : "Passer Festayre+"}
+              {busy ? "Redirection..." : "Synchroniser mes favoris"}
             </button>
           </>
         )}

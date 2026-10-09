@@ -122,7 +122,7 @@ export default function SamPanel() {
       {/* Partage de position, l'action la plus frequente du SAM. */}
       <button
         onClick={shareMyPosition}
-        className="w-full rounded-xl bg-festa-navy py-3.5 text-sm font-bold text-white"
+        className="w-full rounded-xl bg-festa-navy py-3.5 text-sm font-bold text-on-fill"
       >
         Partager ma position au groupe
       </button>
@@ -148,13 +148,13 @@ export default function SamPanel() {
                 </span>
                 <a
                   href={`tel:${c.phone}`}
-                  className="flex min-h-11 items-center rounded-full bg-festa-green px-4 text-xs font-bold text-white"
+                  className="flex min-h-11 items-center rounded-full bg-festa-green px-4 text-xs font-bold text-on-fill"
                 >
                   Appeler
                 </a>
                 <button
                   onClick={() => sendAlert(c)}
-                  className="flex min-h-11 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-white"
+                  className="flex min-h-11 items-center rounded-full bg-festa-red px-4 text-xs font-bold text-on-fill"
                 >
                   Alerte
                 </button>
@@ -187,7 +187,7 @@ export default function SamPanel() {
           />
           <button
             onClick={addContact}
-            className="rounded-lg bg-festa-navy px-4 text-sm font-bold text-white"
+            className="rounded-lg bg-festa-navy px-4 text-sm font-bold text-on-fill"
           >
             OK
           </button>
@@ -214,7 +214,7 @@ export default function SamPanel() {
         )}
         <button
           onClick={waterRound}
-          className="mt-3 min-h-11 w-full rounded-lg bg-festa-green text-sm font-bold text-white"
+          className="mt-3 min-h-11 w-full rounded-lg bg-festa-green text-sm font-bold text-on-fill"
         >
           Tournee d'eau faite
         </button>

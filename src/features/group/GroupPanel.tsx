@@ -73,7 +73,7 @@ export default function GroupPanel() {
             <button
               onClick={() => createGroup(name, pseudo)}
               disabled={!name.trim() || !pseudo.trim()}
-              className="min-h-11 rounded-lg bg-festa-red px-4 text-sm font-bold text-white disabled:opacity-50"
+              className="min-h-11 rounded-lg bg-festa-red px-4 text-sm font-bold text-on-fill disabled:opacity-50"
             >
               Créer
             </button>
@@ -93,7 +93,7 @@ export default function GroupPanel() {
             <button
               onClick={() => joinGroup(code, pseudo)}
               disabled={code.length < 6 || !pseudo.trim()}
-              className="min-h-11 flex-1 rounded-lg bg-festa-navy text-sm font-bold text-white disabled:opacity-50"
+              className="min-h-11 flex-1 rounded-lg bg-festa-navy text-sm font-bold text-on-fill disabled:opacity-50"
             >
               Rejoindre le groupe
             </button>
@@ -124,7 +124,7 @@ export default function GroupPanel() {
               // partage annule
             }
           }}
-          className="mt-2 min-h-11 rounded-full bg-festa-red px-6 text-sm font-bold text-white"
+          className="mt-2 min-h-11 rounded-full bg-festa-red px-6 text-sm font-bold text-on-fill"
         >
           {copied ? "Code copié" : "Partager le code"}
         </button>

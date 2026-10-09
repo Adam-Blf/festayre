@@ -18,8 +18,8 @@ export default function LangSwitcher() {
           onClick={() => setLang(l)}
           className={`flex h-9 w-11 items-center justify-center rounded-lg text-xs font-bold uppercase ${
             lang === l
-              ? "bg-festa-navy text-white"
-              : "border border-card-border bg-card text-muted"
+              ? "bg-festa-navy text-on-fill"
+              : "border border-edge bg-card text-muted"
           }`}
         >
           {l}

@@ -172,7 +172,7 @@ export default function ChecklistPanel() {
         />
         <button
           onClick={addItem}
-          className="rounded-lg bg-festa-red px-4 text-sm font-bold text-white"
+          className="rounded-lg bg-festa-red px-4 text-sm font-bold text-on-fill"
         >
           Ajouter
         </button>
